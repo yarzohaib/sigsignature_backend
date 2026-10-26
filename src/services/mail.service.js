@@ -1,15 +1,8 @@
 require("dotenv").config();
 const fs = require('fs');
 const path = require('path');
-const { SESv2Client, SendEmailCommand } = require('@aws-sdk/client-sesv2');
-
-// Initialize SESv2 client using default AWS credential provider chain
-// Uses IAM role on EC2 server and local AWS credentials/profile on dev machine
-function getSesClient() {
-  return new SESv2Client({
-    region: process.env.AWS_REGION || 'ap-southeast-2',
-  });
-}
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const TEMPLATES_DIR = path.join(__dirname, '..', 'templates', 'emails');
 
@@ -61,17 +54,6 @@ function renderTemplate(templateContent, variables = {}, escapeKeys = null) {
 }
 
 /**
- * Ensures FromEmailAddress is a clean, valid RFC 5322 email address.
- * Automatically extracts the clean email if accidental display names or spaces were included in .env
- */
-function cleanFromAddress(from) {
-  if (!from) return '';
-  const trimmed = from.trim();
-  const match = trimmed.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
-  return match ? match[1] : trimmed;
-}
-
-/**
  * Generic email sending function
  * @param {Object} options
  * @param {string} options.to - Recipient email address
@@ -80,48 +62,27 @@ function cleanFromAddress(from) {
  * @param {string} options.text - Plain text body
  */
 async function sendEmail({ to, subject, html, text }) {
-  if (process.env.MAIL_ENABLED !== 'true') {
-    // Only log recipient and subject, never tokens or links
-    console.log(`[Mail Service] Email suppressed (MAIL_ENABLED is not "true"). Recipient: ${to}, Subject: "${subject}"`);
+  if (process.env.MAIL_ENABLED !== "true") {
+    console.log(`[Mail Service] Email suppressed. Recipient: ${to}, Subject: "${subject}"`);
     return { success: false, suppressed: true };
   }
 
-  const fromAddress = cleanFromAddress(process.env.MAIL_FROM);
-
-  const command = new SendEmailCommand({
-    FromEmailAddress: fromAddress,
-    Destination: {
-      ToAddresses: [to],
-    },
-    Content: {
-      Simple: {
-        Subject: {
-          Data: subject,
-          Charset: 'UTF-8',
-        },
-        Body: {
-          Html: {
-            Data: html,
-            Charset: 'UTF-8',
-          },
-          Text: {
-            Data: text,
-            Charset: 'UTF-8',
-          },
-        },
-      },
-    },
+  const { data, error } = await resend.emails.send({
+    from: process.env.MAIL_FROM,
+    to: [to],
+    replyTo: process.env.MAIL_REPLY_TO,
+    subject,
+    html,
+    text,
   });
 
-  try {
-    const sesClient = getSesClient();
-    const response = await sesClient.send(command);
-    console.log(`[Mail Service] Email sent successfully via Amazon SES. Recipient: ${to}, MessageId: ${response.MessageId}`);
-    return { success: true, messageId: response.MessageId };
-  } catch (err) {
-    console.error(`[Mail Service] AWS SES Error sending to ${to}: [${err.name || 'Error'}] ${err.message}`);
-    throw err;
+  if (error) {
+    console.error(`[Mail Service] Resend error sending to ${to}: ${error.message}`);
+    throw new Error(error.message);
   }
+
+  console.log(`[Mail Service] Email sent via Resend. Recipient: ${to}, Id: ${data.id}`);
+  return { success: true, messageId: data.id };
 }
 
 /**
