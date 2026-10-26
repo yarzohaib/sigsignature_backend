@@ -220,17 +220,18 @@ describe("Minimal API Requests & Friendly Validation Suite", () => {
     try {
       const result = await signatureService.update("sig-test-1", "user-test-1", {
         data: {
-          fullName: "New User Name",
+          fullName: "Attempted Name Change",
+          phone: "+1-555-9999",
         },
       });
 
-      // Verify that the payload passed to repo preserved existing styling fields
-      assert.equal(updatedPayload.data.fullName, "New User Name");
+      // Verify that fullName is strictly locked to original identity on Free plan
+      assert.equal(updatedPayload.data.fullName, "Original User", "fullName must be locked to original");
+      assert.equal(updatedPayload.data.phone, "+1-555-9999", "Other editable fields like phone must update");
       assert.equal(updatedPayload.data.themeColor, "#10b981", "Existing themeColor must be preserved");
       assert.equal(updatedPayload.data.fontFamily, "Inter", "Existing fontFamily must be preserved");
       assert.equal(updatedPayload.data.layout, "horizontal", "Existing layout must be preserved");
       assert.equal(updatedPayload.data.socialIconsStyle, "circle", "Existing socialIconsStyle must be preserved");
-      assert.equal(updatedPayload.data.phone, "+1-555-0199", "Existing phone must be preserved");
     } finally {
       signatureRepository.findByIdForUser = originalFind;
       signatureRepository.update = originalUpdate;

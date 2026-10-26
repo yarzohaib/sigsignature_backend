@@ -32,10 +32,16 @@ const signatureController = {
     try {
       const userId = req.user.id || req.user.sub;
       const signatures = await signatureService.list(userId);
+      const lifetimeCreated = await signatureService.lifetimeCount(userId);
 
       return res.status(200).json({
         success: true,
         data: signatures.map(formatSignature),
+        meta: {
+          total: signatures.length,
+          lifetimeCreated,
+          limit: Number(process.env.SIGNATURE_LIMIT_PER_USER || 3),
+        },
       });
     } catch (error) {
       next(error);

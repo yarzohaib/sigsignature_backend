@@ -27,6 +27,13 @@ const signatureService = {
   },
 
   /**
+   * Total signatures created over lifetime by the user.
+   */
+  async lifetimeCount(userId) {
+    return signatureRepository.lifetimeCountByUser(userId);
+  },
+
+  /**
    * Get a single signature by id for the authenticated user.
    * Throws 404 if signature does not exist or belongs to another user.
    * Sanitizes text fields on read to neutralize any legacy/unvalidated stored HTML tags.
@@ -41,15 +48,15 @@ const signatureService = {
 
   /**
    * Create a new signature for the authenticated user.
-   * Enforces the account plan limit (SIGNATURE_LIMIT_PER_USER).
+   * Enforces the account lifetime plan limit (SIGNATURE_LIMIT_PER_USER).
    */
   async create(userId, { name, templateId, templateVersion, data }) {
     const limit = Number(process.env.SIGNATURE_LIMIT_PER_USER || 3);
-    const count = await signatureRepository.countByUser(userId);
+    const lifetimeCount = await signatureRepository.lifetimeCountByUser(userId);
 
-    if (count >= limit) {
+    if (lifetimeCount >= limit) {
       throw new ForbiddenError(
-        `You have reached the maximum signature limit (${limit}) for your account. Please delete an existing signature or upgrade your plan.`,
+        `You have reached the maximum signature limit (${limit}) for your Free account. Deleting signatures does not grant additional slots. Please upgrade your plan.`,
         "SIGNATURE_LIMIT_REACHED"
       );
     }
@@ -90,6 +97,37 @@ const signatureService = {
         ...existingData,
         ...updateData.data,
       };
+
+      // Strict Identity Lock: Prevent modifying Full Name and Company Name on saved signatures
+      if (existingData.fullName) {
+        payload.data.fullName = existingData.fullName;
+      }
+      if (existingData.companyName !== undefined) {
+        payload.data.companyName = existingData.companyName;
+      }
+
+      // If Studio format with canvas elements, also preserve the bound/original name and company text elements
+      if (Array.isArray(existingData.elements) && Array.isArray(payload.data.elements)) {
+        const origNameEl = existingData.elements.find(
+          (el) => el.type === "text" && (el.bind === "name" || el.id === "el-name")
+        );
+        const origCompanyEl = existingData.elements.find(
+          (el) => el.type === "text" && (el.bind === "company" || el.id === "el-company")
+        );
+
+        if (origNameEl || origCompanyEl) {
+          payload.data.elements = payload.data.elements.map((el) => {
+            if (origNameEl && el.id === origNameEl.id) {
+              return { ...el, text: origNameEl.text };
+            }
+            if (origCompanyEl && el.id === origCompanyEl.id) {
+              return { ...el, text: origCompanyEl.text };
+            }
+            return el;
+          });
+        }
+      }
+
       if (
         updateData.data.socials &&
         typeof updateData.data.socials === "object" &&
@@ -136,15 +174,15 @@ const signatureService = {
 
   /**
    * Duplicate an existing signature with a new ID and name `${name} (Copy)`.
-   * Enforces the account plan limit (SIGNATURE_LIMIT_PER_USER).
+   * Enforces the account lifetime plan limit (SIGNATURE_LIMIT_PER_USER).
    */
   async duplicate(id, userId) {
     const limit = Number(process.env.SIGNATURE_LIMIT_PER_USER || 3);
-    const count = await signatureRepository.countByUser(userId);
+    const lifetimeCount = await signatureRepository.lifetimeCountByUser(userId);
 
-    if (count >= limit) {
+    if (lifetimeCount >= limit) {
       throw new ForbiddenError(
-        `You have reached the maximum signature limit (${limit}) for your account. Please delete an existing signature or upgrade your plan.`,
+        `You have reached the maximum signature limit (${limit}) for your Free account. Deleting signatures does not grant additional slots. Please upgrade your plan.`,
         "SIGNATURE_LIMIT_REACHED"
       );
     }

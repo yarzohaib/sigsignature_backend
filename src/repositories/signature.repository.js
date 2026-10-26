@@ -5,29 +5,42 @@ const Signature = db.orm.public.Signature;
 
 const signatureRepository = {
   /**
-   * List all signatures for a user, newest updatedAt first.
+   * List all active (non-deleted) signatures for a user, newest updatedAt first.
    * Every query filters strictly by userId.
    */
   async listByUser(userId) {
-    return Signature.where({ userId })
+    const all = await Signature.where({ userId })
       .orderBy((s) => s.updatedAt.desc())
       .all();
+    return all.filter((s) => !s.data || !s.data._deleted);
   },
 
   /**
    * Find a specific signature by id and userId.
-   * Ensures a user can never access another user's signature.
+   * Returns null if signature is deleted or does not belong to user.
    */
   async findByIdForUser(id, userId) {
-    return Signature.where({ id, userId }).first();
+    const s = await Signature.where({ id, userId }).first();
+    if (!s || (s.data && s.data._deleted)) {
+      return null;
+    }
+    return s;
   },
 
   /**
-   * Count signatures owned by a user.
+   * Count active (non-deleted) signatures owned by a user.
    */
   async countByUser(userId) {
-    const signatures = await Signature.where({ userId }).all();
-    return signatures.length;
+    const active = await this.listByUser(userId);
+    return active.length;
+  },
+
+  /**
+   * Count all signatures created by a user over lifetime (including deleted).
+   */
+  async lifetimeCountByUser(userId) {
+    const all = await Signature.where({ userId }).all();
+    return all.length;
   },
 
   /**
@@ -58,9 +71,23 @@ const signatureRepository = {
 
   /**
    * Delete a signature owned by a user.
+   * Soft-deletes by marking _deleted: true inside data so lifetime creation limits persist.
    */
   async delete(id, userId) {
-    return Signature.where({ id, userId }).delete();
+    const existing = await Signature.where({ id, userId }).first();
+    if (!existing) return null;
+    const now = Temporal.Now.instant();
+    const existingData =
+      typeof existing.data === "object" && existing.data !== null ? existing.data : {};
+    const updatedData = {
+      ...existingData,
+      _deleted: true,
+      deletedAt: new Date().toISOString(),
+    };
+    return Signature.where({ id, userId }).update({
+      data: updatedData,
+      updatedAt: now,
+    });
   },
 };
 

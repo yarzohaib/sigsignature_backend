@@ -90,6 +90,7 @@ const accountService = {
     const settings = formatSettings(settingsRow);
 
     const signatureCount = await signatureRepository.countByUser(userId);
+    const lifetimeCount = await signatureRepository.lifetimeCountByUser(userId);
     const signatureLimit = Number(process.env.SIGNATURE_LIMIT_PER_USER || 3);
 
     return {
@@ -106,7 +107,9 @@ const accountService = {
       providers,
       settings,
       usage: {
-        signatures: signatureCount,
+        signatures: Math.min(signatureLimit, Math.max(signatureCount, lifetimeCount)),
+        activeSignatures: signatureCount,
+        lifetimeCreated: lifetimeCount,
         signatureLimit,
       },
     };
