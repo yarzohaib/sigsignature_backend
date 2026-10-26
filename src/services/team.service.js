@@ -98,7 +98,25 @@ const teamService = {
       updatePayload.name = patch.name.trim();
     }
     if (patch.data !== undefined) {
-      updatePayload.data = patch.data;
+      const existingData = (team.data && typeof team.data === "object") ? team.data : {};
+      const incomingData = (patch.data && typeof patch.data === "object") ? patch.data : {};
+      const mergedData = { ...incomingData };
+
+      const existingLifetime = Number(existingData.lifetimeMemberCount || 0);
+      const incomingLifetime = Number(incomingData.lifetimeMemberCount || 0);
+      if (existingLifetime > 0 || incomingLifetime > 0) {
+        mergedData.lifetimeMemberCount = Math.max(existingLifetime, incomingLifetime);
+      }
+
+      // Strictly lock companyName and company if already set on the team template
+      if (existingData.companyName && typeof existingData.companyName === "string" && existingData.companyName.trim()) {
+        mergedData.companyName = existingData.companyName;
+      }
+      if (existingData.company && typeof existingData.company === "string" && existingData.company.trim()) {
+        mergedData.company = existingData.company;
+      }
+
+      updatePayload.data = mergedData;
     }
 
     await teamRepository.updateTeam(team.id, updatePayload);
@@ -130,9 +148,12 @@ const teamService = {
     }
 
     const currentMemberCount = await teamRepository.countMembers(team.id);
-    if (currentMemberCount >= team.memberLimit) {
+    const teamData = (team.data && typeof team.data === "object") ? team.data : {};
+    const lifetimeCount = Math.max(Number(teamData.lifetimeMemberCount || 0), currentMemberCount);
+
+    if (lifetimeCount >= team.memberLimit) {
       throw new ForbiddenError(
-        `You have reached the maximum limit of ${team.memberLimit} team members allowed on your plan.`,
+        `You have reached the maximum limit of ${team.memberLimit} team members allowed on your plan. Deleting members does not grant additional creation slots. Please upgrade your plan.`,
         "TEAM_MEMBER_LIMIT_REACHED"
       );
     }
@@ -146,7 +167,7 @@ const teamService = {
       );
     }
 
-    return teamRepository.createMember({
+    const member = await teamRepository.createMember({
       teamId: team.id,
       name: input.name.trim(),
       email,
@@ -156,6 +177,17 @@ const teamService = {
       socials: Array.isArray(input.socials) ? input.socials : [],
       status: "draft",
     });
+
+    // Record lifetime team member creation
+    const nextLifetime = lifetimeCount + 1;
+    await teamRepository.updateTeam(team.id, {
+      data: {
+        ...teamData,
+        lifetimeMemberCount: nextLifetime,
+      },
+    });
+
+    return member;
   },
 
   /**
@@ -176,7 +208,10 @@ const teamService = {
     }
 
     const updatePayload = {};
-    if (input.name !== undefined) {
+    // Full Name Lock: Strictly lock Full Name on existing team members
+    if (member.name && member.name.trim()) {
+      updatePayload.name = member.name;
+    } else if (input.name !== undefined) {
       updatePayload.name = input.name.trim();
     }
     if (input.jobTitle !== undefined) {
@@ -230,6 +265,21 @@ const teamService = {
     const member = await teamRepository.findMemberById(memberId);
     if (!member || member.teamId !== team.id) {
       throw new NotFoundError("Team member not found", "TEAM_MEMBER_NOT_FOUND");
+    }
+
+    // Pin lifetime count before deletion so removing members never restores creation slots
+    const currentMemberCount = await teamRepository.countMembers(team.id);
+    const teamData = (team.data && typeof team.data === "object") ? team.data : {};
+    const existingLifetime = Number(teamData.lifetimeMemberCount || 0);
+    const pinnedLifetime = Math.max(existingLifetime, currentMemberCount);
+
+    if (pinnedLifetime > existingLifetime) {
+      await teamRepository.updateTeam(team.id, {
+        data: {
+          ...teamData,
+          lifetimeMemberCount: pinnedLifetime,
+        },
+      });
     }
 
     await teamRepository.deleteMember(memberId);

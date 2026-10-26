@@ -3,19 +3,33 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="supported-color-schemes" content="light dark" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <meta name="format-detection" content="telephone=no, address=no, email=no, date=no, url=no" />
   <title>Your Account Was Deleted</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet" />
   <style type="text/css">
+    :root {
+      color-scheme: light dark;
+      supported-color-schemes: light dark;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background-color: #F3F4F6;
+    body, .email-body {
+      background-color: #F3F4F6 !important;
       font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       -webkit-font-smoothing: antialiased;
       padding: 40px 10px;
       margin: 0;
     }
+    @media (prefers-color-scheme: dark) {
+      body, .email-body { background-color: #111827 !important; }
+      .email-container { background-color: #FFFFFF !important; }
+    }
+    [data-ogsc] body, [data-ogsc] .email-body { background-color: #111827 !important; }
+    [data-ogsc] .email-container { background-color: #FFFFFF !important; }
   </style>
 </head>
 <body style="margin: 0; padding: 40px 10px; background-color: #F3F4F6; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased;">
@@ -53,7 +67,14 @@
           </tr>
           <tr>
             <td style="background-color: #022977; padding: 16px 20px; text-align: center;">
-              <p style="margin: 0; color: #E5E7EB; font-family: 'Commissioner', sans-serif; font-size: 11px;">&copy; 2026 Sig Signature. All rights reserved.</p>
+              <p style="margin: 0; color: #E5E7EB; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; text-align: center;">&copy; 2026 Sig Signature. All rights reserved.</p>
+              <p style="margin: 6px 0 0 0; color: #93C5FD; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; line-height: 16px; text-align: center;">
+                <a href="https://sigsignature.com/privacy" target="_blank" style="color: #93C5FD; text-decoration: underline; font-weight: 500;">Privacy Policy</a>
+                <span style="color: #60A5FA; padding: 0 6px;">&bull;</span>
+                <a href="https://sigsignature.com/terms" target="_blank" style="color: #93C5FD; text-decoration: underline; font-weight: 500;">Terms of Service</a>
+                <span style="color: #60A5FA; padding: 0 6px;">&bull;</span>
+                <a href="https://sigsignature.com/contact" target="_blank" style="color: #93C5FD; text-decoration: underline; font-weight: 500;">Contact Support</a>
+              </p>
             </td>
           </tr>
         </table>

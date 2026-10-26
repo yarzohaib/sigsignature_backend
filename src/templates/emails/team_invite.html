@@ -1,138 +1,345 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="supported-color-schemes" content="light dark" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <meta name="format-detection" content="telephone=no, address=no, email=no, date=no, url=no" />
   <title>Your New Email Signature</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet" />
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
   <style type="text/css">
+    :root {
+      color-scheme: light dark;
+      supported-color-schemes: light dark;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background-color: #F3F4F6;
+    body, .email-body {
+      background-color: #F3F4F6 !important;
       font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       -webkit-font-smoothing: antialiased;
       padding: 40px 10px;
       margin: 0;
     }
+    .email-container {
+      width: 600px;
+      max-width: 100%;
+      margin: 0 auto;
+      background-color: #FFFFFF !important;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    .header-card-wrap {
+      padding: 40px 40px 0 40px;
+    }
+    .header-card {
+      width: 520px;
+      height: 318px;
+      background-image: url('https://res.cloudinary.com/qi6tz0xr/image/upload/v1791616026/c5445.png');
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+    }
+    .logo {
+      position: absolute;
+      top: 22px;
+      left: 27px;
+      width: 80px;
+      height: 38px;
+      object-fit: contain;
+    }
+    .header-title {
+      position: absolute;
+      top: 106px;
+      left: 28px;
+      color: #022977 !important;
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 34px;
+      font-weight: 600;
+      line-height: 38px;
+      letter-spacing: -0.5px;
+      margin: 0;
+    }
+    .header-desc {
+      position: absolute;
+      top: 256px;
+      left: 28px;
+      max-width: 320px;
+      color: #49484E !important;
+      font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 24px;
+      margin: 0;
+    }
+    .mail-icon {
+      position: absolute;
+      right: 48px;
+      bottom: 21px;
+      width: 82px;
+      height: 60px;
+      object-fit: contain;
+    }
+    .body-content {
+      padding: 49px 40px 32px 40px;
+      text-align: center;
+      background-color: #FFFFFF !important;
+    }
+    .body-title {
+      color: #022977 !important;
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 34px;
+      letter-spacing: -0.3px;
+      margin: 0 0 16px 0;
+    }
+    .body-text {
+      color: #2D2D22 !important;
+      font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 28px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .btn-wrap {
+      margin-top: 32px;
+      text-align: center;
+    }
+    .btn {
+      display: inline-block;
+      width: 496px;
+      max-width: 100%;
+      height: 58px;
+      line-height: 58px;
+      background: #022977 !important;
+      background: linear-gradient(135deg, #245FD4 0%, #022977 100%) !important;
+      color: #FFFFFF !important;
+      text-decoration: none;
+      font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(2, 41, 119, 0.25);
+    }
+    .expire-notice {
+      margin-top: 24px;
+      color: #979797 !important;
+      font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 20px;
+    }
+    .ignore-notice {
+      margin-top: 16px;
+      color: #979797 !important;
+      font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 20px;
+    }
+    .footer-bar {
+      background-color: #022977 !important;
+      padding: 16px 20px;
+      text-align: center;
+    }
+    .footer-bar p {
+      color: #E5E7EB !important;
+      font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 16px;
+      margin: 0;
+    }
+    .footer-bar p.links {
+      margin-top: 6px;
+    }
+    .footer-bar a {
+      color: #93C5FD !important;
+      text-decoration: underline;
+      font-weight: 500;
+    }
+    .footer-bar a:hover {
+      color: #FFFFFF !important;
+    }
+    .footer-dot {
+      color: #60A5FA;
+      padding: 0 6px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    /* Dark Mode Enforcements (Apple Mail, iOS, Outlook app) */
+    @media (prefers-color-scheme: dark) {
+      body, .email-body {
+        background-color: #111827 !important;
+      }
+      .email-container {
+        background-color: #FFFFFF !important;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35) !important;
+      }
+      .body-content {
+        background-color: #FFFFFF !important;
+      }
+      .header-title {
+        color: #022977 !important;
+      }
+      .header-desc {
+        color: #49484E !important;
+      }
+      .body-title {
+        color: #022977 !important;
+      }
+      .body-text {
+        color: #2D2D22 !important;
+      }
+      .expire-notice, .ignore-notice {
+        color: #71717A !important;
+      }
+      .footer-bar {
+        background-color: #022977 !important;
+      }
+      .footer-bar p {
+        color: #E5E7EB !important;
+      }
+      .footer-bar a {
+        color: #93C5FD !important;
+      }
+      .footer-dot {
+        color: #60A5FA !important;
+      }
+    }
+
+    /* Outlook / Gmail data attribute dark mode targeting */
+    [data-ogsc] body, [data-ogsc] .email-body { background-color: #111827 !important; }
+    [data-ogsc] .email-container { background-color: #FFFFFF !important; }
+    [data-ogsc] .body-content { background-color: #FFFFFF !important; }
+    [data-ogsc] .header-title { color: #022977 !important; }
+    [data-ogsc] .header-desc { color: #49484E !important; }
+    [data-ogsc] .body-title { color: #022977 !important; }
+    [data-ogsc] .body-text { color: #2D2D22 !important; }
+    [data-ogsc] .footer-bar { background-color: #022977 !important; }
+
+    /* Mobile Responsiveness */
     @media only screen and (max-width: 600px) {
-      body { padding: 10px 0 !important; }
-      .email-container { width: 100% !important; border-radius: 0 !important; }
+      body, .email-body { padding: 10px 0 !important; }
+      .email-container { border-radius: 0 !important; width: 100% !important; }
       .header-card-wrap { padding: 16px 16px 0 16px !important; }
-      .header-card-inner { padding: 20px 18px 14px 18px !important; }
-      .header-title-text { font-size: 22px !important; line-height: 27px !important; }
-      .header-desc-text { font-size: 13px !important; line-height: 18px !important; max-width: 100% !important; }
-      .body-content-wrap { padding: 32px 20px 24px 20px !important; }
-      .body-title-text { font-size: 22px !important; line-height: 28px !important; }
-      .body-body-text { font-size: 15px !important; line-height: 24px !important; }
-      .btn-link { width: 100% !important; font-size: 16px !important; padding: 16px 20px !important; }
-      .mail-img { width: 70px !important; height: auto !important; }
+      .header-card {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 520 / 318;
+      }
+      .logo {
+        top: 7% !important;
+        left: 5% !important;
+        width: 16% !important;
+        height: auto !important;
+      }
+      .header-title {
+        top: 33% !important;
+        left: 5% !important;
+        font-size: 22px !important;
+        line-height: 26px !important;
+      }
+      .header-desc {
+        top: 72% !important;
+        left: 5% !important;
+        max-width: 65% !important;
+        font-size: 13px !important;
+        line-height: 17px !important;
+      }
+      .mail-icon {
+        right: 9% !important;
+        bottom: 7% !important;
+        width: 15% !important;
+        height: auto !important;
+      }
+      .body-content {
+        padding: 32px 20px 24px 20px !important;
+      }
+      .body-title {
+        font-size: 22px !important;
+        line-height: 28px !important;
+      }
+      .body-text {
+        font-size: 15px !important;
+        line-height: 24px !important;
+      }
+      .btn {
+        width: 100% !important;
+        font-size: 16px !important;
+      }
     }
   </style>
 </head>
-<body style="margin: 0; padding: 40px 10px; background-color: #F3F4F6; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased;">
-  <!-- Outer Wrapper Table -->
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #F3F4F6; margin: 0; padding: 0;">
-    <tr>
-      <td align="center">
-        <!-- Container Table (600px Max) -->
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="email-container" style="width: 100%; max-width: 600px; background-color: #FFFFFF; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); margin: 0 auto;">
+<body class="email-body" style="background-color: #F3F4F6; margin: 0; padding: 40px 10px; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="email-body" style="background-color: #F3F4F6; margin: 0; padding: 0;">
+  <tr>
+    <td align="center">
+      <div class="email-container" style="width: 600px; max-width: 100%; margin: 0 auto; background-color: #FFFFFF; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);">
+        
+        <!-- Top Header Card -->
+        <div class="header-card-wrap" style="padding: 40px 40px 0 40px;">
+          <div class="header-card" style="width: 520px; height: 318px; background-image: url('https://res.cloudinary.com/qi6tz0xr/image/upload/v1791616026/c5445.png'); background-size: 100% 100%; background-position: center; background-repeat: no-repeat; position: relative;">
+            <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791613812/5b74b757b5.png" alt="Sig Signature Logo" class="logo" style="position: absolute; top: 22px; left: 27px; width: 80px; height: 38px; object-fit: contain; border: 0;" />
+            
+            <h1 class="header-title" style="position: absolute; top: 106px; left: 28px; margin: 0; color: #022977; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 34px; font-weight: 600; line-height: 38px; letter-spacing: -0.5px;">Your New Email<br>Signature</h1>
+            
+            <p class="header-desc" style="position: absolute; top: 256px; left: 28px; margin: 0; max-width: 320px; color: #49484E; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 400; line-height: 24px;">{{ownerName}} has shared a branded signature for you on {{teamName}}.</p>
+            
+            <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791611428/bb5775b7b.svg" alt="Mail Icon" class="mail-icon" style="position: absolute; right: 48px; bottom: 21px; width: 82px; height: 60px; object-fit: contain; border: 0;" />
+          </div>
+        </div>
+        
+        <!-- Body Content Area -->
+        <div class="body-content" style="padding: 49px 40px 32px 40px; text-align: center; background-color: #FFFFFF;">
+          <h2 class="body-title" style="margin: 0 0 16px 0; color: #022977; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 28px; font-weight: 600; line-height: 34px; letter-spacing: -0.3px; text-align: center;">Your Signature is Ready</h2>
           
-          <!-- Top Header Card Section -->
-          <tr>
-            <td class="header-card-wrap" style="padding: 40px 40px 0 40px;">
-              <!-- Header Card Table with Cutout PNG Background -->
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" background="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791616026/c5445.png" style="background-color: #EBF2FD; border-radius: 12px; background-image: url('https://res.cloudinary.com/qi6tz0xr/image/upload/v1791616026/c5445.png'); background-size: 100% 100%; background-position: center; background-repeat: no-repeat;">
-                <tr>
-                  <td class="header-card-inner" style="padding: 24px 26px 18px 26px;">
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-                      
-                      <!-- Row 1: Logo -->
-                      <tr>
-                        <td align="left" style="padding-bottom: 22px;">
-                          <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791613812/5b74b757b5.png" alt="Sig Signature Logo" width="80" height="38" style="display: block; border: 0; width: 80px; height: 38px; object-fit: contain;" />
-                        </td>
-                        <td width="96" style="width: 96px;"></td>
-                      </tr>
+          <p class="body-text" style="margin: 0 auto; color: #2D2D22; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; font-weight: 400; line-height: 28px; max-width: 480px; text-align: center;">
+            Hi {{memberName}},<br><br>
+            {{ownerName}} has created a professional email signature for you on the <strong>{{teamName}}</strong> team. Click the button below to view, preview, and install your signature.
+          </p>
+          
+          <div class="btn-wrap" style="margin-top: 32px; text-align: center;">
+            <a href="{{actionUrl}}" target="_blank" class="btn" style="display: inline-block; width: 496px; max-width: 100%; height: 58px; line-height: 58px; background: #022977; background: linear-gradient(135deg, #245FD4 0%, #022977 100%); color: #FFFFFF; text-decoration: none; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 600; border-radius: 12px; text-align: center; box-shadow: 0 4px 14px rgba(2, 41, 119, 0.25);">View &amp; Install Signature</a>
+          </div>
+          
+          <p class="expire-notice" style="margin: 24px 0 0 0; color: #979797; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; font-weight: 400; line-height: 20px; text-align: center;">No password required to preview your signature. Simply click the link above.</p>
+          <p class="ignore-notice" style="margin: 16px 0 0 0; color: #979797; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; font-weight: 400; line-height: 20px; text-align: center;">If you believe this invitation was sent to you in error, you can safely ignore this email.</p>
+        </div>
+        
+        <!-- Streamlined Consistent Footer -->
+        <div class="footer-bar" style="background-color: #022977; padding: 16px 20px; text-align: center;">
+          <p style="margin: 0; color: #E5E7EB; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 400; line-height: 16px; text-align: center;">&copy; 2026 Sig Signature. All rights reserved.</p>
+          <p class="links" style="margin: 6px 0 0 0; color: #93C5FD; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; line-height: 16px; text-align: center;">
+            <a href="https://sigsignature.com/privacy" target="_blank" style="color: #93C5FD; text-decoration: underline; font-weight: 500;">Privacy Policy</a>
+            <span class="footer-dot" style="color: #60A5FA; padding: 0 6px;">&bull;</span>
+            <a href="https://sigsignature.com/terms" target="_blank" style="color: #93C5FD; text-decoration: underline; font-weight: 500;">Terms of Service</a>
+            <span class="footer-dot" style="color: #60A5FA; padding: 0 6px;">&bull;</span>
+            <a href="https://sigsignature.com/contact" target="_blank" style="color: #93C5FD; text-decoration: underline; font-weight: 500;">Contact Support</a>
+          </p>
+        </div>
 
-                      <!-- Row 2: Header Title -->
-                      <tr>
-                        <td valign="top" align="left" style="padding-bottom: 26px; padding-right: 15px;">
-                          <h1 class="header-title-text" style="margin: 0; color: #022977; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 32px; font-weight: 600; line-height: 38px; letter-spacing: -0.5px;">
-                            Your New Email<br />Signature
-                          </h1>
-                        </td>
-                        <td valign="top" align="right" width="96" style="width: 96px;"></td>
-                      </tr>
-
-                      <!-- Row 3: Subtitle + Mail Icon in Cutout -->
-                      <tr>
-                        <td valign="bottom" align="left" style="padding-right: 15px;">
-                          <p class="header-desc-text" style="margin: 0; max-width: 290px; color: #49484E; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; font-weight: 400; line-height: 22px;">
-                            {{ownerName}} has shared a branded signature for you on {{teamName}}.
-                          </p>
-                        </td>
-                        <td valign="bottom" align="right" width="96" style="width: 96px; text-align: right; padding-right: 8px;">
-                          <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791611428/bb5775b7b.svg" alt="Mail Icon" width="82" height="60" class="mail-img" style="display: inline-block; border: 0; width: 82px; height: 60px; object-fit: contain;" />
-                        </td>
-                      </tr>
-
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- Body Content Area -->
-          <tr>
-            <td class="body-content-wrap" style="padding: 44px 40px 32px 40px; text-align: center;">
-              <h2 class="body-title-text" style="margin: 0 0 16px 0; color: #022977; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 26px; font-weight: 600; line-height: 32px; letter-spacing: -0.3px; text-align: center;">
-                Your Signature is Ready
-              </h2>
-              
-              <p class="body-body-text" style="margin: 0 auto; color: #2D2D22; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; font-weight: 400; line-height: 26px; max-width: 480px; text-align: center;">
-                Hi {{memberName}},<br /><br />
-                {{ownerName}} has created a professional email signature for you on the <strong>{{teamName}}</strong> team. Click the button below to view, preview, and install your signature.
-              </p>
-
-              <!-- Button CTA -->
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" width="100%" style="max-width: 496px; margin: 32px auto 0 auto;">
-                <tr>
-                  <td align="center" style="border-radius: 12px; background-color: #245FD4; background: linear-gradient(135deg, #245FD4 0%, #022977 100%); box-shadow: 0 4px 14px rgba(2, 41, 119, 0.25);">
-                    <a href="{{actionUrl}}" target="_blank" class="btn-link" style="display: block; width: 100%; padding: 18px 24px; box-sizing: border-box; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 600; color: #FFFFFF; text-decoration: none; border-radius: 12px; text-align: center;">
-                      View my signature
-                    </a>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Notice Details -->
-              <p style="margin: 28px 0 0 0; color: #888888; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 13px; line-height: 20px; text-align: center;">
-                This invite link will expire in {{expiresIn}}.
-              </p>
-              <p style="margin: 12px 0 0 0; color: #9E9E9E; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12px; line-height: 18px; text-align: center;">
-                If you weren&apos;t expecting this signature invite, you can safely ignore this email.
-              </p>
-            </td>
-          </tr>
-
-          <!-- Footer Bar -->
-          <tr>
-            <td style="background-color: #022977; padding: 16px 20px; text-align: center;">
-              <p style="margin: 0; color: #E5E7EB; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 400; line-height: 16px; text-align: center;">
-                &copy; 2026 Sig Signature. All rights reserved.
-              </p>
-              <p style="margin: 4px 0 0 0; color: #93C5FD; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 10px; line-height: 14px; text-align: center;">
-                Privacy Policy &bull; Terms of Service &bull; Contact Support
-              </p>
-            </td>
-          </tr>
-
-        </table>
-      </td>
-    </tr>
-  </table>
+      </div>
+    </td>
+  </tr>
+</table>
 </body>
 </html>
