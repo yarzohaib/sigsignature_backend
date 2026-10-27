@@ -31,10 +31,62 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
+// Allowed origins for CORS whitelist
+const defaultAllowedOrigins = [
+  "https://www.sigsignature.com",
+  "https://sigsignature.com",
+];
+
+if (process.env.FRONTEND_URL) {
+  defaultAllowedOrigins.push(process.env.FRONTEND_URL.replace(/\/$/, ""));
+}
+
+if (process.env.NODE_ENV !== "production") {
+  defaultAllowedOrigins.push(
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:3001",
+    "http://127.0.0.1:3001"
+  );
+}
+
+const allowedOriginsSet = new Set(defaultAllowedOrigins);
+
+if (process.env.ALLOWED_ORIGINS) {
+  process.env.ALLOWED_ORIGINS.split(",").forEach((origin) => {
+    const trimmed = origin.trim().replace(/\/$/, "");
+    if (trimmed) allowedOriginsSet.add(trimmed);
+  });
+}
+
 app.use(helmet());
 app.use(
   cors({
-    origin: true,
+    origin: (origin, callback) => {
+      // 1. Allow server-to-server, curl, mobile, or uptime/health monitors with no origin header
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      const normalizedOrigin = origin.replace(/\/$/, "");
+
+      // 2. Allow whitelisted origins
+      if (allowedOriginsSet.has(normalizedOrigin)) {
+        return callback(null, true);
+      }
+
+      // 3. In non-production, permit any localhost or 127.0.0.1 port
+      if (
+        process.env.NODE_ENV !== "production" &&
+        (normalizedOrigin.startsWith("http://localhost:") ||
+          normalizedOrigin.startsWith("http://127.0.0.1:"))
+      ) {
+        return callback(null, true);
+      }
+
+      // 4. Reject untrusted cross-origin requests
+      return callback(null, false);
+    },
     credentials: true,
   })
 );
