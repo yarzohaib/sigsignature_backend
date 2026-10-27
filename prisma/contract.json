@@ -1073,6 +1073,13 @@
                   "kind": "scalar"
                 }
               },
+              "onboardingSeenAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
               "password": {
                 "nullable": true,
                 "type": {
@@ -1240,6 +1247,9 @@
                 },
                 "lastName": {
                   "column": "lastName"
+                },
+                "onboardingSeenAt": {
+                  "column": "onboardingSeenAt"
                 },
                 "password": {
                   "column": "password"
@@ -2307,6 +2317,11 @@
                   "nativeType": "text",
                   "nullable": true
                 },
+                "onboardingSeenAt": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
                 "password": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -2460,7 +2475,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "72c39a12e3adbb0cb1366e1176624365df6d01ea342d18227c952a2b4b9229df"
+    "storageHash": "9c48988441980960f5e256f94441ed0a7e0cc6da50d7cfc746c1b337f50badcc"
   },
   "execution": {
     "executionHash": "883e2c80aab4489619a3a40c9f199046fe27141721f36df26650b07f360e4d35",

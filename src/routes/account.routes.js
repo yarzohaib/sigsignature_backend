@@ -71,6 +71,17 @@ router.post(
 );
 
 /**
+ * @route   POST /api/v1/account/onboarding-seen
+ * @desc    Mark onboarding modal as seen (idempotent)
+ * @access  Private
+ */
+router.post(
+  "/onboarding-seen",
+  writeRateLimiter,
+  accountController.markOnboardingSeen
+);
+
+/**
  * @route   POST /api/v1/account/password
  * @desc    Change password, revoke other sessions, and send email alert
  * @access  Private (strict rate limit like login)

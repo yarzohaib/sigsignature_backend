@@ -102,6 +102,7 @@ const accountService = {
         companyName: user.companyName ?? null,
         avatarUrl: user.avatarUrl ?? null,
         isVerified: user.isVerified,
+        onboardingSeenAt: formatIso(user.onboardingSeenAt),
       },
       hasPassword,
       providers,
@@ -176,6 +177,21 @@ const accountService = {
 
     const updatedRow = await userSettingsRepository.joinWaitlist(userId);
     return formatSettings(updatedRow);
+  },
+
+  /**
+   * Mark onboarding modal as seen (idempotent).
+   */
+  async markOnboardingSeen(userId) {
+    const user = await userRepository.findFirst({ id: userId });
+    if (!user) {
+      throw new NotFoundError("User not found", "USER_NOT_FOUND");
+    }
+
+    const updatedUser = await userRepository.markOnboardingSeen(userId);
+    return {
+      onboardingSeenAt: formatIso(updatedUser.onboardingSeenAt),
+    };
   },
 
   /**

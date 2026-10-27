@@ -84,6 +84,25 @@ const accountController = {
   },
 
   /**
+   * POST /api/v1/account/onboarding-seen
+   * Mark onboarding as seen for this user.
+   */
+  async markOnboardingSeen(req, res, next) {
+    try {
+      const userId = req.user.sub || req.user.id;
+      const result = await accountService.markOnboardingSeen(userId);
+
+      return res.status(200).json({
+        success: true,
+        message: "Onboarding marked as seen",
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  /**
    * POST /api/v1/account/password
    * Change account password and revoke other sessions.
    */

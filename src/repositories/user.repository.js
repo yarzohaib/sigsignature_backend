@@ -72,6 +72,15 @@ const userRepository = {
 
     return db.runtime().execute(query);
   },
+
+  async markOnboardingSeen(userId) {
+    const now = Temporal.Now.instant();
+    await User.where({ id: userId }).update({
+      onboardingSeenAt: now,
+      updatedAt: now,
+    });
+    return User.first({ id: userId });
+  },
 };
 
 module.exports = userRepository;

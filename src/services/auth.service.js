@@ -98,6 +98,11 @@ async function issueUserSession(user, { userAgent, ipAddress, deviceName } = {})
       lastName: user.lastName,
       companyName: user.companyName ?? null,
       avatarUrl: user.avatarUrl ?? null,
+      onboardingSeenAt: user.onboardingSeenAt
+        ? typeof user.onboardingSeenAt.toISOString === "function"
+          ? user.onboardingSeenAt.toISOString()
+          : String(user.onboardingSeenAt)
+        : null,
     },
     tokens: {
       accessToken,
@@ -186,6 +191,11 @@ const authService = {
       lastName: user.lastName,
       companyName: user.companyName ?? null,
       avatarUrl: user.avatarUrl ?? null,
+      onboardingSeenAt: user.onboardingSeenAt
+        ? typeof user.onboardingSeenAt.toISOString === "function"
+          ? user.onboardingSeenAt.toISOString()
+          : String(user.onboardingSeenAt)
+        : null,
       isActive: user.isActive,
       isVerified: user.isVerified,
       createdAt: user.createdAt,

@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'72c39a12e3adbb0cb1366e1176624365df6d01ea342d18227c952a2b4b9229df'>;
+  StorageHashBase<'9c48988441980960f5e256f94441ed0a7e0cc6da50d7cfc746c1b337f50badcc'>;
 export type ExecutionHash =
   ExecutionHashBase<'883e2c80aab4489619a3a40c9f199046fe27141721f36df26650b07f360e4d35'>;
 export type ProfileHash =
@@ -348,6 +348,7 @@ export type FieldOutputTypes = {
       readonly isActive: CodecTypes['pg/bool@1']['output'];
       readonly isVerified: CodecTypes['pg/bool@1']['output'];
       readonly lastName: CodecTypes['pg/text@1']['output'] | null;
+      readonly onboardingSeenAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly password: CodecTypes['pg/text@1']['output'] | null;
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
@@ -466,6 +467,7 @@ export type FieldInputTypes = {
       readonly isActive: CodecTypes['pg/bool@1']['input'];
       readonly isVerified: CodecTypes['pg/bool@1']['input'];
       readonly lastName: CodecTypes['pg/text@1']['input'] | null;
+      readonly onboardingSeenAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly password: CodecTypes['pg/text@1']['input'] | null;
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
@@ -584,6 +586,7 @@ export type StorageColumnTypes = {
       readonly isActive: CodecTypes['pg/bool@1']['output'];
       readonly isVerified: CodecTypes['pg/bool@1']['output'];
       readonly lastName: CodecTypes['pg/text@1']['output'] | null;
+      readonly onboardingSeenAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly password: CodecTypes['pg/text@1']['output'] | null;
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
@@ -702,6 +705,7 @@ export type StorageColumnInputTypes = {
       readonly isActive: CodecTypes['pg/bool@1']['input'];
       readonly isVerified: CodecTypes['pg/bool@1']['input'];
       readonly lastName: CodecTypes['pg/text@1']['input'] | null;
+      readonly onboardingSeenAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly password: CodecTypes['pg/text@1']['input'] | null;
       readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
@@ -837,6 +841,7 @@ export namespace Models {
     isActive: CodecTypes['pg/bool@1']['output'];
     isVerified: CodecTypes['pg/bool@1']['output'];
     lastName: CodecTypes['pg/text@1']['output'] | null;
+    onboardingSeenAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
     password: CodecTypes['pg/text@1']['output'] | null;
     updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     emailVerificationTokens: public_EmailVerificationToken[];
@@ -1619,6 +1624,11 @@ type ContractBase = Omit<
                 readonly lastName: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly onboardingSeenAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                   readonly nullable: true;
                 };
                 readonly password: {
@@ -2445,6 +2455,13 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly onboardingSeenAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
               readonly password: {
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -2559,6 +2576,7 @@ type ContractBase = Omit<
                 readonly isActive: { readonly column: 'isActive' };
                 readonly isVerified: { readonly column: 'isVerified' };
                 readonly lastName: { readonly column: 'lastName' };
+                readonly onboardingSeenAt: { readonly column: 'onboardingSeenAt' };
                 readonly password: { readonly column: 'password' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
               };
