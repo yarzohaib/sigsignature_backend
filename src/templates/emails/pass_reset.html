@@ -53,20 +53,33 @@
       background-size: 100% 100%;
       background-position: center;
       background-repeat: no-repeat;
-      position: relative;
+    }
+    .header-layout {
+      width: 100%;
+      height: 318px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .header-logo-cell {
+      height: 70px;
+      padding: 16px 0 0 28px;
+      vertical-align: top;
+      text-align: left;
     }
     .logo {
-      position: absolute;
-      top: 24px;
-      left: 24px;
       width: 80px;
       height: 38px;
       object-fit: contain;
+      display: block;
+    }
+    .header-spacer { height: 35px; }
+    .header-title-cell {
+      height: 76px;
+      padding-left: 28px;
+      vertical-align: top;
+      text-align: left;
     }
     .header-title {
-      position: absolute;
-      top: 108px;
-      left: 28px;
       color: #022977 !important;
       font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 34px;
@@ -75,11 +88,15 @@
       letter-spacing: -0.5px;
       margin: 0;
     }
+    .header-bottom { height: 137px; }
+    .header-desc-cell {
+      width: 72%;
+      padding: 20px 0 24px 28px;
+      vertical-align: top;
+      text-align: left;
+    }
     .header-desc {
-      position: absolute;
-      top: 246px;
-      left: 25px;
-      max-width: 240px;
+      max-width: 270px;
       color: #49484E !important;
       font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 18px;
@@ -87,21 +104,48 @@
       line-height: 24px;
       margin: 0;
     }
+    .header-art-cell {
+      width: 28%;
+      padding: 0 38px 10px 0;
+      vertical-align: bottom;
+      text-align: right;
+    }
+    .header-art-layout {
+      width: 100%;
+      height: 137px;
+      border-collapse: collapse;
+    }
+    .asterisk-cell {
+      height: 36px;
+      padding: 0 0 0 0;
+      vertical-align: top;
+      text-align: right;
+    }
     .asterisk-badge {
-      position: absolute;
-      top: 176px;
-      right: 44px;
+      display: inline-block;
       width: 62px;
       height: 28px;
-      object-fit: contain;
+      border: 2px solid #022977;
+      border-radius: 8px;
+      color: #022977;
+      font-family: Arial, sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      line-height: 24px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .lock-cell {
+      padding: 0;
+      vertical-align: bottom;
+      text-align: right;
     }
     .lock-icon {
-      position: absolute;
-      right: 38px;
-      bottom: 0px;
       width: 76px;
       height: 76px;
       object-fit: contain;
+      display: inline-block;
     }
     .body-content {
       padding: 48px 40px 32px 40px;
@@ -246,7 +290,7 @@
     [data-ogsc] .footer-bar { background-color: #022977 !important; }
 
     /* Mobile Responsiveness */
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 600px), only screen and (max-device-width: 600px) {
       body, .email-body { padding: 10px 0 !important; }
       .email-container { border-radius: 0 !important; width: 100% !important; }
       .header-card-wrap { padding: 16px 16px 0 16px !important; }
@@ -255,35 +299,41 @@
         height: auto !important;
         aspect-ratio: 520 / 318;
       }
+      .header-layout { height: auto !important; }
+      .header-logo-cell { height: 22% !important; padding: 4% 0 0 5% !important; }
       .logo {
-        top: 7% !important;
-        left: 5% !important;
         width: 16% !important;
         height: auto !important;
       }
+      .header-spacer { height: 30px !important; }
+      .header-title-cell { height: 25% !important; padding-left: 5% !important; }
       .header-title {
-        top: 33% !important;
-        left: 5% !important;
-        font-size: 22px !important;
-        line-height: 26px !important;
+        font-size: 18px !important;
+        line-height: 22px !important;
+      }
+      .header-bottom { height: 43% !important; }
+      .header-desc-cell {
+        width: 55% !important;
+        padding: 0 0 6% 5% !important;
+        vertical-align: bottom !important;
       }
       .header-desc {
-        top: 72% !important;
-        left: 5% !important;
-        max-width: 55% !important;
+        max-width: 190px !important;
         font-size: 13px !important;
         line-height: 17px !important;
       }
+      .header-art-cell { width: 28% !important; padding: 0 5% 3% 0 !important; }
+      .header-art-layout { height: 100% !important; }
+      .asterisk-cell { height: 36px !important; }
       .asterisk-badge {
-        top: 55% !important;
-        right: 9% !important;
-        width: 12% !important;
-        height: auto !important;
+        width: 42px !important;
+        height: 22px !important;
+        font-size: 15px !important;
+        letter-spacing: 2px !important;
+        line-height: 18px !important;
       }
       .lock-icon {
-        right: 7% !important;
-        bottom: 0% !important;
-        width: 15% !important;
+        width: 48px !important;
         height: auto !important;
       }
       .body-content {
@@ -312,18 +362,41 @@
         
         <!-- Top Header Card -->
         <div class="header-card-wrap" style="padding: 40px 40px 0 40px;">
-          <div class="header-card" style="width: 520px; height: 318px; background-color: #FFFFFF; background-image: url('https://res.cloudinary.com/qi6tz0xr/image/upload/v1791613913/Rectangle_22187.svg'); background-size: 100% 100%; background-position: center; background-repeat: no-repeat; position: relative;">
-            <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791613812/5b74b757b5.png" alt="Sig Signature Logo" class="logo" style="position: absolute; top: 24px; left: 24px; width: 80px; height: 38px; object-fit: contain; border: 0;" />
-            
-            <h1 class="header-title" style="position: absolute; top: 108px; left: 28px; margin: 0; color: #022977; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 34px; font-weight: 600; line-height: 38px; letter-spacing: -0.5px;">Reset Your Password<br>Securely.</h1>
-            
-            <p class="header-desc" style="position: absolute; top: 246px; left: 25px; margin: 0; max-width: 240px; color: #49484E; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 400; line-height: 24px;">We received a request to reset your password.</p>
-            
-            <!-- Asterisk Badge UP -->
-            <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791611420/32c57n9n72.svg" alt="*** Badge" class="asterisk-badge" style="position: absolute; top: 176px; right: 44px; width: 62px; height: 28px; object-fit: contain; border: 0;" />
-            
-            <!-- Lock Icon DOWN in Cutout -->
-            <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791611424/643v63v63v.svg" alt="Lock Icon" class="lock-icon" style="position: absolute; right: 38px; bottom: 0px; width: 76px; height: 76px; object-fit: contain; border: 0;" />
+          <div class="header-card" style="width: 520px; height: 318px; background-color: #FFFFFF; background-image: url('https://res.cloudinary.com/qi6tz0xr/image/upload/v1791613913/Rectangle_22187.svg'); background-size: 100% 100%; background-position: center; background-repeat: no-repeat;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="520" class="header-layout" style="width: 100%; height: 318px; border-collapse: collapse; table-layout: fixed;">
+              <colgroup><col width="72%" /><col width="28%" /></colgroup>
+              <tr>
+                <td colspan="2" class="header-logo-cell" style="height: 70px; padding: 16px 0 0 28px; vertical-align: top; text-align: left;">
+                  <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791613812/5b74b757b5.png" alt="Sig Signature Logo" class="logo" style="display: block; width: 80px; height: 38px; object-fit: contain; border: 0;" />
+                </td>
+              </tr>
+              <tr><td colspan="2" class="header-spacer" style="height: 35px;"></td></tr>
+              <tr>
+                <td colspan="2" class="header-title-cell" style="height: 76px; padding-left: 28px; vertical-align: top; text-align: left;">
+                  <h1 class="header-title" style="margin: 0; color: #022977; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 34px; font-weight: 600; line-height: 38px; letter-spacing: -0.5px;">Reset Your Password<br />Securely.</h1>
+                </td>
+              </tr>
+              <tr class="header-bottom" style="height: 137px;">
+                <td class="header-desc-cell" style="width: 72%; padding: 64px 0 20px 28px; vertical-align: top; text-align: left;">
+                  <p class="header-desc" style="max-width: 270px; margin: 0; color: #49484E; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 400; line-height: 24px;">We received a request to reset your password.</p>
+                </td>
+                <td class="header-art-cell" style="width: 28%; padding: 0 38px 10px 0; vertical-align: bottom; text-align: right;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" class="header-art-layout" style="width: 100%; height: 137px; border-collapse: collapse;">
+                    <tr>
+                      <td class="asterisk-cell" style="height: 36px; vertical-align: top; text-align: right;">
+                        <span class="asterisk-badge" role="img" aria-label="Password characters" style="display: inline-block; width: 62px; height: 28px; border: 2px solid #022977; border-radius: 8px; color: #022977; font-family: Arial, sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 3px; line-height: 24px; text-align: center; white-space: nowrap;">***</span>
+                      </td>
+                    </tr>
+                    <tr><td style="height: 25px;"></td></tr>
+                    <tr>
+                      <td class="lock-cell" style="vertical-align: bottom; text-align: right;">
+                        <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791611424/643v63v63v.svg" alt="Lock Icon" class="lock-icon" style="display: inline-block; width: 76px; height: 76px; object-fit: contain; border: 0;" />
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
         
