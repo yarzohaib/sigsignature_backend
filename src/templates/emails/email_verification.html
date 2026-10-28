@@ -54,18 +54,31 @@
       background-repeat: no-repeat;
       position: relative;
     }
+    .header-layout {
+      width: 100%;
+      height: 318px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .header-logo-cell {
+      height: 70px;
+      padding: 16px 0 0 28px;
+      vertical-align: top;
+    }
     .logo {
-      position: absolute;
-      top: 22px;
-      left: 27px;
       width: 80px;
       height: 38px;
       object-fit: contain;
+      display: block;
+    }
+    .header-spacer { height: 40px; }
+    .header-title-cell {
+      height: 78px;
+      padding-left: 38px;
+      vertical-align: top;
+      text-align: left;
     }
     .header-title {
-      position: absolute;
-      top: 120px;
-      left: 28px;
       color: #022977 !important;
       font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 34px;
@@ -75,11 +88,15 @@
       text-align: left;
       margin: 0;
     }
+    .header-bottom { height: 130px; }
+    .header-desc-cell {
+      width: 70%;
+      padding: 0 0 24px 28px;
+      vertical-align: bottom;
+      text-align: left;
+    }
     .header-desc {
-      position: absolute;
-      top: 256px;
-      left: 28px;
-      max-width: 310px;
+      max-width: 330px;
       color: #49484E !important;
       font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 18px;
@@ -87,13 +104,17 @@
       line-height: 24px;
       margin: 0;
     }
+    .mail-icon-cell {
+      width: 30%;
+      padding: 0 20px 22px 0;
+      vertical-align: bottom;
+      text-align: right;
+    }
     .mail-icon {
-      position: absolute;
-      right: 24px;
-      bottom: 21px;
       width: 82px;
       height: 60px;
       object-fit: contain;
+      display: inline-block;
     }
     .body-content {
       padding: 49px 40px 32px 40px;
@@ -247,30 +268,29 @@
         height: auto !important;
         aspect-ratio: 520 / 318;
       }
+      .header-layout { height: auto !important; }
+      .header-logo-cell { height: 22% !important; padding: 4% 0 0 5% !important; }
       .logo {
-        top: 7% !important;
-        left: 5% !important;
         width: 16% !important;
         height: auto !important;
       }
+      .header-spacer { height: 12% !important; }
+      .header-title-cell { height: 25% !important; padding-left: 7% !important; }
       .header-title {
-        top: 38% !important;
-        left: 5% !important;
         font-size: 22px !important;
         line-height: 26px !important;
         text-align: left !important;
       }
+      .header-bottom { height: 41% !important; }
+      .header-desc-cell { padding: 0 0 5% 5% !important; }
       .header-desc {
-        top: 75% !important;
-        left: 5% !important;
-        max-width: 65% !important;
+        max-width: 100% !important;
         font-size: 13px !important;
         line-height: 17px !important;
       }
+      .mail-icon-cell { padding: 0 4% 5% 0 !important; }
       .mail-icon {
-        right: 4% !important;
-        bottom: 7% !important;
-        width: 15% !important;
+        width: 80% !important;
         height: auto !important;
       }
       .body-content {
@@ -299,14 +319,28 @@
         
         <!-- Top Header Card -->
         <div class="header-card-wrap" style="padding: 40px 40px 0 40px;">
-          <div class="header-card" style="width: 520px; height: 318px; background-image: url('https://res.cloudinary.com/qi6tz0xr/image/upload/v1791616026/c5445.png'); background-size: 100% 100%; background-position: center; background-repeat: no-repeat; position: relative;">
-            <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791613812/5b74b757b5.png" alt="Sig Signature Logo" class="logo" style="position: absolute; top: 22px; left: 27px; width: 80px; height: 38px; object-fit: contain; border: 0;" />
-            
-            <h1 class="header-title" style="position: absolute; top: 120px; left: 28px; margin: 0; color: #022977; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 34px; font-weight: 600; line-height: 38px; letter-spacing: -0.5px; text-align: left;">Confirm Your Email<br>Address</h1>
-            
-            <p class="header-desc" style="position: absolute; top: 256px; left: 28px; margin: 0; max-width: 310px; color: #49484E; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 400; line-height: 24px;">One quick step left to verify your email and unlock your Sig Signature account.</p>
-            
-            <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791611428/bb5775b7b.svg" alt="Mail Icon" class="mail-icon" style="position: absolute; right: 24px; bottom: 21px; width: 82px; height: 60px; object-fit: contain; border: 0;" />
+          <div class="header-card" style="width: 520px; height: 318px; background-image: url('https://res.cloudinary.com/qi6tz0xr/image/upload/v1791616026/c5445.png'); background-size: 100% 100%; background-position: center; background-repeat: no-repeat;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="520" class="header-layout" style="width: 100%; height: 318px; border-collapse: collapse; table-layout: fixed;">
+              <tr>
+                <td colspan="2" class="header-logo-cell" style="height: 70px; padding: 16px 0 0 28px; vertical-align: top; text-align: left;">
+                  <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791613812/5b74b757b5.png" alt="Sig Signature Logo" class="logo" style="display: block; width: 80px; height: 38px; object-fit: contain; border: 0;" />
+                </td>
+              </tr>
+              <tr><td colspan="2" class="header-spacer" style="height: 40px;"></td></tr>
+              <tr>
+                <td colspan="2" class="header-title-cell" style="height: 78px; padding-left: 38px; vertical-align: top; text-align: left;">
+                  <h1 class="header-title" style="margin: 0; color: #022977; font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 34px; font-weight: 600; line-height: 38px; letter-spacing: -0.5px; text-align: left;">Confirm Your Email<br />Address</h1>
+                </td>
+              </tr>
+              <tr class="header-bottom" style="height: 130px;">
+                <td class="header-desc-cell" style="width: 70%; padding: 0 0 24px 28px; vertical-align: bottom; text-align: left;">
+                  <p class="header-desc" style="max-width: 330px; margin: 0; color: #49484E; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 400; line-height: 24px;">One quick step left to verify your email and unlock your Sig Signature account.</p>
+                </td>
+                <td class="mail-icon-cell" style="width: 30%; padding: 0 20px 22px 0; vertical-align: bottom; text-align: right;">
+                  <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791611428/bb5775b7b.svg" alt="Mail Icon" class="mail-icon" style="display: inline-block; width: 82px; height: 60px; object-fit: contain; border: 0;" />
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
         
