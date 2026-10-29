@@ -475,7 +475,8 @@ const freeTextSchema = z
     size: friendlyEnum("size", ALLOWED_SIZES, true).default("md"),
     bold: z.boolean().default(false),
     align: friendlyEnum("align", ALLOWED_ALIGNS, true).default("left"),
-    bind: friendlyEnum("bind", ["name", "jobTitle", "email", "phone"], true).optional(),
+    bind: friendlyEnum("bind", ["name", "jobTitle", "email", "phone", "company", "website"], true).optional(),
+    icon: z.enum(["phone", "email", "website", "address"]).nullable().optional(),
   })
   .passthrough();
 

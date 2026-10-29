@@ -318,4 +318,109 @@ describe("Minimal API Requests & Friendly Validation Suite", () => {
       'Invalid size "not-a-number". File size must be an integer'
     );
   });
+
+  // 6. Studio signature saving with text elements containing contact icon and website/company bindings
+  test("6. Studio signature saving with text element contact icons and website/company binds", async () => {
+    const postValidator = validate(createSignatureSchema);
+
+    const studioBody = {
+      name: "Studio With Contact Icons",
+      templateId: "design-studio",
+      data: {
+        canvas: { width: 600, height: 250 },
+        elements: [
+          {
+            id: "el-phone",
+            type: "text",
+            x: 20,
+            y: 40,
+            w: 200,
+            h: 24,
+            text: "+1 (555) 000-0000",
+            bind: "phone",
+            icon: "phone",
+          },
+          {
+            id: "el-email",
+            type: "text",
+            x: 20,
+            y: 70,
+            w: 200,
+            h: 24,
+            text: "alex@example.com",
+            bind: "email",
+            icon: "email",
+          },
+          {
+            id: "el-web",
+            type: "text",
+            x: 20,
+            y: 100,
+            w: 200,
+            h: 24,
+            text: "https://example.com",
+            bind: "website",
+            icon: "website",
+          },
+          {
+            id: "el-addr",
+            type: "text",
+            x: 20,
+            y: 130,
+            w: 200,
+            h: 24,
+            text: "123 Main St, New York, NY",
+            icon: "address",
+          },
+          {
+            id: "el-company",
+            type: "text",
+            x: 20,
+            y: 160,
+            w: 200,
+            h: 24,
+            text: "Acme Corp",
+            bind: "company",
+            icon: null,
+          },
+        ],
+      },
+    };
+
+    const res = await runValidation(postValidator, studioBody);
+    assert.equal(res.status, 200, "Studio signature with icons and website/company bind should pass validation");
+    const elements = res.reqBody.data.elements;
+    assert.equal(elements.length, 5);
+    assert.equal(elements[0].icon, "phone");
+    assert.equal(elements[0].bind, "phone");
+    assert.equal(elements[1].icon, "email");
+    assert.equal(elements[1].bind, "email");
+    assert.equal(elements[2].icon, "website");
+    assert.equal(elements[2].bind, "website");
+    assert.equal(elements[3].icon, "address");
+    assert.equal(elements[4].bind, "company");
+    assert.equal(elements[4].icon, null);
+
+    // Invalid icon should fail validation
+    const invalidIconBody = {
+      name: "Studio Invalid Icon",
+      templateId: "design-studio",
+      data: {
+        elements: [
+          {
+            id: "el-bad-icon",
+            type: "text",
+            x: 0,
+            y: 0,
+            w: 100,
+            h: 20,
+            text: "Invalid",
+            icon: "not-an-icon",
+          },
+        ],
+      },
+    };
+    const badRes = await runValidation(postValidator, invalidIconBody);
+    assert.equal(badRes.status, 400);
+  });
 });
