@@ -477,6 +477,8 @@ const freeTextSchema = z
     align: friendlyEnum("align", ALLOWED_ALIGNS, true).default("left"),
     bind: friendlyEnum("bind", ["name", "jobTitle", "email", "phone", "company", "website"], true).optional(),
     icon: z.enum(["phone", "email", "website", "address"]).nullable().optional(),
+    color: z.string().trim().regex(/^#[0-9a-fA-F]{6}$/).optional(),
+    fontFamily: friendlyEnum("fontFamily", ALLOWED_FONT_FAMILIES, true).optional(),
   })
   .passthrough();
 
@@ -534,6 +536,7 @@ const freeDividerSchema = z
     locked: z.boolean().optional(),
     orientation: friendlyEnum("orientation", ALLOWED_ORIENTATIONS, true).default("horizontal"),
     thickness: z.number().min(1).max(50).default(1),
+    color: z.string().trim().regex(/^#[0-9a-fA-F]{6}$/).optional(),
   })
   .passthrough();
 
@@ -548,6 +551,9 @@ const freeCtaSchema = z
     locked: z.boolean().optional(),
     label: plainTextString({ max: 200 }).default("Button"),
     url: z.string().max(2000).default("#"),
+    color: z.string().trim().regex(/^#[0-9a-fA-F]{6}$/).optional(),
+    textColor: z.string().trim().regex(/^#[0-9a-fA-F]{6}$/).optional(),
+    fontFamily: friendlyEnum("fontFamily", ALLOWED_FONT_FAMILIES, true).optional(),
   })
   .passthrough();
 

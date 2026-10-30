@@ -382,6 +382,31 @@ describe("Minimal API Requests & Friendly Validation Suite", () => {
             text: "Acme Corp",
             bind: "company",
             icon: null,
+            fontFamily: "Roboto",
+            color: "#059669",
+          },
+          {
+            id: "el-cta",
+            type: "cta",
+            x: 20,
+            y: 190,
+            w: 140,
+            h: 36,
+            label: "Book a Demo",
+            url: "https://example.com/book",
+            color: "#38BDF8",
+            textColor: "#FFFFFF",
+            fontFamily: "Inter",
+          },
+          {
+            id: "el-divider",
+            type: "divider",
+            x: 20,
+            y: 230,
+            w: 200,
+            h: 2,
+            thickness: 2,
+            color: "#E2E8F0",
           },
         ],
       },
@@ -390,7 +415,7 @@ describe("Minimal API Requests & Friendly Validation Suite", () => {
     const res = await runValidation(postValidator, studioBody);
     assert.equal(res.status, 200, "Studio signature with icons and website/company bind should pass validation");
     const elements = res.reqBody.data.elements;
-    assert.equal(elements.length, 5);
+    assert.equal(elements.length, 7);
     assert.equal(elements[0].icon, "phone");
     assert.equal(elements[0].bind, "phone");
     assert.equal(elements[1].icon, "email");
@@ -400,6 +425,12 @@ describe("Minimal API Requests & Friendly Validation Suite", () => {
     assert.equal(elements[3].icon, "address");
     assert.equal(elements[4].bind, "company");
     assert.equal(elements[4].icon, null);
+    assert.equal(elements[4].fontFamily, "Roboto");
+    assert.equal(elements[4].color, "#059669");
+    assert.equal(elements[5].color, "#38BDF8");
+    assert.equal(elements[5].textColor, "#FFFFFF");
+    assert.equal(elements[5].fontFamily, "Inter");
+    assert.equal(elements[6].color, "#E2E8F0");
 
     // Invalid icon should fail validation
     const invalidIconBody = {
