@@ -35,6 +35,7 @@ if (process.env.NODE_ENV !== "production") {
 const defaultAllowedOrigins = [
   "https://www.sigsignature.com",
   "https://sigsignature.com",
+  "https://staging.sigsignature.com",
 ];
 
 if (process.env.FRONTEND_URL) {
@@ -70,8 +71,11 @@ app.use(
 
       const normalizedOrigin = origin.replace(/\/$/, "");
 
-      // 2. Allow whitelisted origins
-      if (allowedOriginsSet.has(normalizedOrigin)) {
+      // 2. Allow whitelisted origins or *.sigsignature.com subdomains
+      if (
+        allowedOriginsSet.has(normalizedOrigin) ||
+        /^https:\/\/([a-z0-9-]+\.)*sigsignature\.com$/.test(normalizedOrigin)
+      ) {
         return callback(null, true);
       }
 
