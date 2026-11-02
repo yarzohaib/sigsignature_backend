@@ -441,20 +441,20 @@ const signupLimiter = createRateLimiter({
   code: "SIGNUP_RATE_LIMITED",
 });
 
-// 2. Forgot password limiter: 5 requests per 15 minutes per email (generous IP cap)
+// 2. Forgot password limiter: 3 requests per 15 minutes per email (generous IP cap)
 const forgotPasswordLimiter = createAccountAwareRateLimiter({
   windowMs: 15 * 60 * 1000,
-  emailMax: 5,
+  emailMax: 3,
   ipMax: 100,
   prefix: "forgot_pwd",
   message: "Too many password reset requests. Please wait 15 minutes before trying again.",
   code: "RATE_LIMITED",
 });
 
-// 3. Verification email limiter: 5 requests per 15 minutes per email (generous IP cap)
+// 3. Verification email limiter: 3 requests per 15 minutes per email (generous IP cap)
 const resendVerificationLimiter = createAccountAwareRateLimiter({
   windowMs: 15 * 60 * 1000,
-  emailMax: 5,
+  emailMax: 3,
   ipMax: 100,
   prefix: "resend_verif",
   message: "Too many verification requests. Please wait 15 minutes before requesting again.",

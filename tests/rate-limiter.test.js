@@ -526,7 +526,7 @@ describe("Rate Limiter Suite", () => {
   // -------------------------------------------------------------------------
   // 7. Forgot password rate limiting
   // -------------------------------------------------------------------------
-  test("7. Forgot password limits 5 requests per 15 minutes per email", async () => {
+  test("7. Forgot password limits 3 requests per 15 minutes per email", async () => {
     const ip = "198.51.100.8";
     const email = "forgot@example.com";
 
@@ -534,7 +534,7 @@ describe("Rate Limiter Suite", () => {
       return res.status(200).json({ success: true, message: "Reset link sent" });
     }
 
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 3; i++) {
       const res = await runPipeline(
         [validate(forgotPasswordSchema), forgotPasswordLimiter],
         {
@@ -546,7 +546,7 @@ describe("Rate Limiter Suite", () => {
       assert.equal(res.status, 200, `Forgot password request ${i} should succeed`);
     }
 
-    // 6th request for same email gets 429
+    // 4th request for same email gets 429
     const blockedRes = await runPipeline(
       [validate(forgotPasswordSchema), forgotPasswordLimiter],
       {

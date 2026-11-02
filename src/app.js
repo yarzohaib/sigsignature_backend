@@ -106,6 +106,42 @@ app.use("/api/v1/team", teamRoutes);
 app.use("/api/v1/public/team", publicTeamRoutes);
 app.use("/api/v1/account", accountRoutes);
 
+// OpenAPI & API Documentation Endpoints
+const openApiSpec = require("./openapi.json");
+const openApiHandler = (req, res) => {
+  res.status(200).json(openApiSpec);
+};
+const docsHtmlHandler = (req, res) => {
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.send(`<!DOCTYPE html>
+<html>
+  <head>
+    <title>SigSignature API Docs</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
+  </head>
+  <body>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js" crossorigin="anonymous"></script>
+    <script>
+      window.onload = () => {
+        window.ui = SwaggerUIBundle({
+          url: '/api/v1/openapi.json',
+          dom_id: '#swagger-ui',
+        });
+      };
+    </script>
+  </body>
+</html>`);
+};
+
+app.get("/openapi.json", openApiHandler);
+app.get("/api/v1/openapi.json", openApiHandler);
+app.get("/api-docs", docsHtmlHandler);
+app.get("/docs", docsHtmlHandler);
+app.get("/swagger", docsHtmlHandler);
+
 const healthHandler = (req, res) => {
   res.status(200).json({
     success: true,

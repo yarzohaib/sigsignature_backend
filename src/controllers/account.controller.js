@@ -137,7 +137,12 @@ const accountController = {
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
       res.setHeader("Pragma", "no-cache");
 
-      return res.status(200).send(JSON.stringify(exportData, null, 2));
+      const responsePayload = {
+        success: true,
+        data: exportData,
+      };
+
+      return res.status(200).send(JSON.stringify(responsePayload, null, 2));
     } catch (error) {
       next(error);
     }
