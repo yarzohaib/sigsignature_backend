@@ -485,6 +485,7 @@ const teamService = {
     return {
       member: {
         name: member.name,
+        email: member.email,
         maskedEmail: maskEmail(member.email),
         jobTitle: member.jobTitle || "",
         phone: member.phone || "",
@@ -551,6 +552,7 @@ const teamService = {
       return {
         member: {
           name: updatedMember.name,
+          email: updatedMember.email,
           maskedEmail: maskEmail(updatedMember.email),
           jobTitle: updatedMember.jobTitle || "",
           phone: updatedMember.phone || "",
@@ -573,6 +575,7 @@ const teamService = {
     return {
       member: {
         name: member.name,
+        email: member.email,
         maskedEmail: maskEmail(member.email),
         jobTitle: member.jobTitle || "",
         phone: member.phone || "",
