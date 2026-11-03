@@ -355,6 +355,28 @@ describe("XSS Hardening & Free-Text Validation Suite", () => {
     assert.equal(badProfile.status, 400);
     assert.equal(badProfile.body.message, "This field cannot contain HTML or markup");
 
+    // Enforces firstName min 2 and max 50 chars, and auto-trimming
+    const shortFirst = await runValidation(profileValidator, {
+      firstName: "A",
+    });
+    assert.equal(shortFirst.status, 400);
+
+    const whitespaceFirst = await runValidation(profileValidator, {
+      firstName: "   ",
+    });
+    assert.equal(whitespaceFirst.status, 400);
+
+    const longFirst = await runValidation(profileValidator, {
+      firstName: "A".repeat(51),
+    });
+    assert.equal(longFirst.status, 400);
+
+    // Enforces lastName max 50 chars
+    const longLast = await runValidation(profileValidator, {
+      lastName: "B".repeat(51),
+    });
+    assert.equal(longLast.status, 400);
+
     const settingsValidator = validate(updateSettingsSchema);
     const badSettingsColor = await runValidation(settingsValidator, {
       brandColor: "expression(alert(1))",

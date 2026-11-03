@@ -4,16 +4,26 @@ const { ALLOWED_FONT_FAMILIES } = require("./signature.validator");
 
 /**
  * Validator for updating user profile.
- * - firstName: 1 to 60, trimmed, required if sent, plain text only
- * - lastName: 0 to 60, nullable, plain text only
+ * - firstName: 2 to 50, trimmed, required if sent, plain text only
+ * - lastName: 0 to 50, nullable, plain text only
  * - companyName: 0 to 100, nullable, plain text only
  * - email: ignored silently if sent
  * - strips unknown keys
  */
 const updateProfileSchema = z
   .object({
-    firstName: plainTextString({ max: 60, required: true }).optional(),
-    lastName: plainTextString({ max: 60 }).nullable().optional(),
+    firstName: plainTextString({
+      min: 2,
+      max: 50,
+      required: true,
+      error: "First name must be between 2 and 50 characters",
+    }).optional(),
+    lastName: plainTextString({
+      max: 50,
+      error: "Last name cannot exceed 50 characters",
+    })
+      .nullable()
+      .optional(),
     companyName: plainTextString({ max: 100 }).nullable().optional(),
     avatarUrl: z
       .string({ error: "Avatar URL must be a string" })
