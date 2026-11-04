@@ -23,8 +23,13 @@ const {
 
 const router = express.Router();
 
-// Apply general rate limiter across all auth routes
-router.use(generalAuthLimiter);
+// Apply general rate limiter across all auth routes (except POST /login which has its own dedicated loginLimiter)
+router.use((req, res, next) => {
+  if (req.path === "/login" && req.method === "POST") {
+    return next();
+  }
+  return generalAuthLimiter(req, res, next);
+});
 
 // OAuth Routes
 router.get("/google", oauthController.googleAuth);

@@ -132,14 +132,14 @@ describe("Rate Limiter Suite", () => {
   // -------------------------------------------------------------------------
   test("calculateLockoutSeconds follows the required progression", () => {
     assert.equal(calculateLockoutSeconds(0), 0);
-    assert.equal(calculateLockoutSeconds(4), 0);
-    assert.equal(calculateLockoutSeconds(5), 30); // 30s
-    assert.equal(calculateLockoutSeconds(6), 60); // 1m
-    assert.equal(calculateLockoutSeconds(7), 120); // 2m
-    assert.equal(calculateLockoutSeconds(8), 240); // 4m
-    assert.equal(calculateLockoutSeconds(9), 480); // 8m
-    assert.equal(calculateLockoutSeconds(10), 900); // 15m maximum
-    assert.equal(calculateLockoutSeconds(15), 900); // capped at 15m
+    assert.equal(calculateLockoutSeconds(19), 0);
+    assert.equal(calculateLockoutSeconds(20), 30); // 30s
+    assert.equal(calculateLockoutSeconds(21), 60); // 1m
+    assert.equal(calculateLockoutSeconds(22), 120); // 2m
+    assert.equal(calculateLockoutSeconds(23), 240); // 4m
+    assert.equal(calculateLockoutSeconds(24), 480); // 8m
+    assert.equal(calculateLockoutSeconds(25), 900); // 15m maximum
+    assert.equal(calculateLockoutSeconds(30), 900); // capped at 15m
   });
 
   // -------------------------------------------------------------------------
@@ -172,14 +172,14 @@ describe("Rate Limiter Suite", () => {
   });
 
   // -------------------------------------------------------------------------
-  // 2. 5 wrong passwords for one account triggers a lockout
+  // 2. 20 wrong passwords for one account triggers progressive lockout (429)
   // -------------------------------------------------------------------------
-  test("2. 5 wrong passwords for one account triggers progressive lockout (429)", async () => {
+  test("2. 20 wrong passwords for one account triggers progressive lockout (429)", async () => {
     const ip = "198.51.100.2";
     const email = "lockout-test@example.com";
 
-    // First 5 attempts with wrong password should fail with 401
-    for (let i = 1; i <= 5; i++) {
+    // First 20 attempts with wrong password should fail with 401
+    for (let i = 1; i <= 20; i++) {
       const res = await runPipeline(
         [validate(loginSchema), loginLimiter],
         {
@@ -199,7 +199,7 @@ describe("Rate Limiter Suite", () => {
       );
     }
 
-    // 6th attempt should be blocked by progressive lockout with 429
+    // 21st attempt should be blocked by progressive lockout with 429
     const blockedRes = await runPipeline(
       [validate(loginSchema), loginLimiter],
       {
@@ -214,12 +214,12 @@ describe("Rate Limiter Suite", () => {
 
     assert.equal(blockedRes.status, 429);
     assert.ok(blockedRes.headers["retry-after"]);
-    assert.equal(blockedRes.headers["x-ratelimit-limit"], "5");
+    assert.equal(blockedRes.headers["x-ratelimit-limit"], "20");
     assert.equal(blockedRes.headers["x-ratelimit-remaining"], "0");
 
     assert.equal(blockedRes.body.success, false);
     assert.equal(blockedRes.body.code, "LOGIN_RATE_LIMITED");
-    assert.equal(blockedRes.body.message, "Too many login attempts. Please try again later.");
+    assert.match(blockedRes.body.message, /Too many login attempts\. Please try again in .* or reset your password\./);
     assert.ok(
       blockedRes.body.retryAfterSeconds > 0 && blockedRes.body.retryAfterSeconds <= 30
     );
@@ -232,8 +232,8 @@ describe("Rate Limiter Suite", () => {
     const ip = "198.51.100.3";
     const email = "window-test@example.com";
 
-    // Cause 5 failures
-    for (let i = 1; i <= 5; i++) {
+    // Cause 20 failures
+    for (let i = 1; i <= 20; i++) {
       await runPipeline(
         [validate(loginSchema), loginLimiter],
         {
@@ -298,8 +298,8 @@ describe("Rate Limiter Suite", () => {
     const ip = "198.51.100.4";
     const email = "reset-test@example.com";
 
-    // 4 failed attempts (1 away from lockout)
-    for (let i = 1; i <= 4; i++) {
+    // 19 failed attempts (1 away from lockout)
+    for (let i = 1; i <= 19; i++) {
       const res = await runPipeline(
         [validate(loginSchema), loginLimiter],
         {
@@ -314,7 +314,7 @@ describe("Rate Limiter Suite", () => {
       assert.equal(res.status, 401);
     }
 
-    // 5th attempt is successful
+    // 20th attempt is successful
     const loginRes = await runPipeline(
       [validate(loginSchema), loginLimiter],
       {
@@ -333,8 +333,8 @@ describe("Rate Limiter Suite", () => {
     const cleared = await testStore.get(ipEmailKey);
     assert.equal(cleared, null);
 
-    // Now, user should have a fresh set of 4 attempts without being locked out
-    for (let i = 1; i <= 4; i++) {
+    // Now, user should have a fresh set of 19 attempts without being locked out
+    for (let i = 1; i <= 19; i++) {
       const res = await runPipeline(
         [validate(loginSchema), loginLimiter],
         {
@@ -353,13 +353,13 @@ describe("Rate Limiter Suite", () => {
   // -------------------------------------------------------------------------
   // 5. A different IP can still log in to the same account until the per email cap
   // -------------------------------------------------------------------------
-  test("5. A different IP can still log in to the same account until the per-email cap (20 failures)", async () => {
+  test("5. A different IP can still log in to the same account until the per-email cap (50 failures)", async () => {
     const ip1 = "198.51.100.51";
     const ip2 = "198.51.100.52";
     const email = "shared-target@example.com";
 
-    // IP 1 fails 5 times and gets locked out
-    for (let i = 1; i <= 5; i++) {
+    // IP 1 fails 20 times and gets locked out
+    for (let i = 1; i <= 20; i++) {
       await runPipeline(
         [validate(loginSchema), loginLimiter],
         {
@@ -404,9 +404,9 @@ describe("Rate Limiter Suite", () => {
       "IP 2 should successfully log in despite IP 1 lockout"
     );
 
-    // Now test the global per-email cap of 20 failures across distributed IPs
+    // Now test the global per-email cap of 50 failures across distributed IPs
     const distEmail = "distributed-target@example.com";
-    for (let i = 1; i <= 20; i++) {
+    for (let i = 1; i <= 50; i++) {
       const randomIp = `10.0.1.${i}`;
       const failRes = await runPipeline(
         [validate(loginSchema), loginLimiter],
@@ -422,7 +422,7 @@ describe("Rate Limiter Suite", () => {
       assert.equal(failRes.status, 401);
     }
 
-    // 21st attempt from a brand new IP should trigger the per-email cap 429
+    // 51st attempt from a brand new IP should trigger the per-email cap 429
     const newIp = "10.0.2.99";
     const emailCappedRes = await runPipeline(
       [validate(loginSchema), loginLimiter],
@@ -438,7 +438,7 @@ describe("Rate Limiter Suite", () => {
 
     assert.equal(emailCappedRes.status, 429);
     assert.equal(emailCappedRes.body.code, "LOGIN_RATE_LIMITED");
-    assert.equal(emailCappedRes.body.message, "Too many login attempts. Please try again later.");
+    assert.match(emailCappedRes.body.message, /Too many login attempts\. Please try again in .* or reset your password\./);
   });
 
   // -------------------------------------------------------------------------

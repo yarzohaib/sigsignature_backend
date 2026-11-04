@@ -116,31 +116,44 @@ function getClientIp(req) {
   return req.socket?.remoteAddress || "127.0.0.1";
 }
 
-/**
- * Calculates progressive lockout duration in seconds based on consecutive failures:
- * - < 5 failures: 0s (no lockout)
- * - 5 failures: 30s
- * - 6 failures: 60s (1m)
- * - 7 failures: 120s (2m)
- * - 8 failures: 240s (4m)
- * - 9 failures: 480s (8m)
- * - 10+ failures: 900s (15m maximum)
- */
-function calculateLockoutSeconds(failures) {
-  if (failures < 5) return 0;
-  const exponent = failures - 5;
-  const seconds = 30 * Math.pow(2, exponent);
-  return Math.min(900, Math.floor(seconds));
-}
-
 // ---------------------------------------------------------------------------
 // 1. Account-Aware Login Rate Limiter (3 Layers)
 // ---------------------------------------------------------------------------
 const LOGIN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const LOGIN_IP_FLOOD_MAX = 300; // 300 requests in 15 min per IP
-const LOGIN_EMAIL_FAILURES_MAX = 20; // 20 failures in 15 min per email across all IPs
-const LOGIN_FAILURES_BEFORE_LOCKOUT = 5; // 5 failures before progressive lockout
-const GENERIC_LOGIN_RATE_LIMIT_MSG = "Too many login attempts. Please try again later.";
+const LOGIN_EMAIL_FAILURES_MAX = 50; // 50 failures in 15 min per email across all IPs
+const LOGIN_FAILURES_BEFORE_LOCKOUT = parseInt(
+  process.env.LOGIN_RATE_LIMIT_MAX || "20",
+  10
+); // 20 attempts before progressive lockout per (IP + email)
+
+function formatLoginRateLimitMessage(retryAfterSeconds) {
+  if (!retryAfterSeconds || retryAfterSeconds <= 0) {
+    return "Too many login attempts. Please try again in 5 minutes or reset your password.";
+  }
+  if (retryAfterSeconds < 60) {
+    return `Too many login attempts. Please try again in ${retryAfterSeconds} second${retryAfterSeconds === 1 ? "" : "s"} or reset your password.`;
+  }
+  const minutes = Math.ceil(retryAfterSeconds / 60);
+  return `Too many login attempts. Please try again in ${minutes} minute${minutes === 1 ? "" : "s"} or reset your password.`;
+}
+
+/**
+ * Calculates progressive lockout duration in seconds based on consecutive failures:
+ * - < threshold failures: 0s (no lockout)
+ * - threshold failures: 30s
+ * - threshold + 1 failures: 60s (1m)
+ * - threshold + 2 failures: 120s (2m)
+ * - threshold + 3 failures: 240s (4m)
+ * - threshold + 4 failures: 480s (8m)
+ * - threshold + 5+ failures: 900s (15m maximum)
+ */
+function calculateLockoutSeconds(failures, threshold = LOGIN_FAILURES_BEFORE_LOCKOUT) {
+  if (failures < threshold) return 0;
+  const exponent = failures - threshold;
+  const seconds = 30 * Math.pow(2, exponent);
+  return Math.min(900, Math.floor(seconds));
+}
 
 async function loginLimiter(req, res, next) {
   const ip = getClientIp(req);
@@ -163,7 +176,7 @@ async function loginLimiter(req, res, next) {
     res.setHeader("X-RateLimit-Reset", Math.ceil(ipRecord.resetAt / 1000));
     return res.status(429).json({
       success: false,
-      message: GENERIC_LOGIN_RATE_LIMIT_MSG,
+      message: formatLoginRateLimitMessage(retryAfterSeconds),
       retryAfterSeconds,
       code: "LOGIN_RATE_LIMITED",
     });
@@ -191,13 +204,13 @@ async function loginLimiter(req, res, next) {
     res.setHeader("X-RateLimit-Reset", Math.ceil(ipEmailRecord.lockedUntil / 1000));
     return res.status(429).json({
       success: false,
-      message: GENERIC_LOGIN_RATE_LIMIT_MSG,
+      message: formatLoginRateLimitMessage(retryAfterSeconds),
       retryAfterSeconds,
       code: "LOGIN_RATE_LIMITED",
     });
   }
 
-  // Layer 2: Check per-email failure cap across all IPs (20 failures in 15 minutes)
+  // Layer 2: Check per-email failure cap across all IPs (50 failures in 15 minutes)
   const emailRecord = await store.get(emailKey);
   if (emailRecord && emailRecord.count >= LOGIN_EMAIL_FAILURES_MAX) {
     const retryAfterSeconds = Math.max(1, Math.ceil((emailRecord.resetAt - now) / 1000));
@@ -207,7 +220,7 @@ async function loginLimiter(req, res, next) {
     res.setHeader("X-RateLimit-Reset", Math.ceil(emailRecord.resetAt / 1000));
     return res.status(429).json({
       success: false,
-      message: GENERIC_LOGIN_RATE_LIMIT_MSG,
+      message: formatLoginRateLimitMessage(retryAfterSeconds),
       retryAfterSeconds,
       code: "LOGIN_RATE_LIMITED",
     });
@@ -216,7 +229,8 @@ async function loginLimiter(req, res, next) {
   // Optional Cloudflare Turnstile Hook (disabled unless TURNSTILE_SECRET_KEY is set)
   const currentFailures = ipEmailRecord?.count || 0;
   const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
-  if (turnstileSecret && currentFailures >= LOGIN_FAILURES_BEFORE_LOCKOUT) {
+  const turnstileThreshold = parseInt(process.env.TURNSTILE_THRESHOLD || "5", 10);
+  if (turnstileSecret && currentFailures >= turnstileThreshold) {
     const token =
       req.body?.["cf-turnstile-token"] ||
       req.body?.turnstileToken ||
@@ -271,11 +285,11 @@ async function loginLimiter(req, res, next) {
   res.setHeader("X-RateLimit-Reset", Math.ceil(resetTimestamp / 1000));
 
   // If Turnstile is active, wrap res.json so that if credentials fail (401)
-  // and failures reach 5+, captchaRequired: true is included in the 401 response
+  // and failures reach turnstileThreshold, captchaRequired: true is included in the 401 response
   if (turnstileSecret) {
     const originalJson = res.json.bind(res);
     res.json = function (data) {
-      if (res.statusCode === 401 && (currentFailures + 1 >= LOGIN_FAILURES_BEFORE_LOCKOUT)) {
+      if (res.statusCode === 401 && (currentFailures + 1 >= turnstileThreshold)) {
         if (data && typeof data === "object") {
           data.captchaRequired = true;
         }
@@ -461,11 +475,11 @@ const resendVerificationLimiter = createAccountAwareRateLimiter({
   code: "RATE_LIMITED",
 });
 
-// 4. General auth endpoints limiter: 60 requests per minute
+// 4. General auth endpoints limiter: 180 requests per minute
 const generalAuthLimiter = createRateLimiter({
   windowMs: 60 * 1000,
-  max: 60,
-  message: "Too many requests to authentication service. Please slow down.",
+  max: 180,
+  message: "Too many requests to authentication service. Please try again in a few moments or reset your password.",
   code: "AUTH_RATE_LIMITED",
 });
 
@@ -524,6 +538,8 @@ module.exports = {
   setStore,
   getClientIp,
   calculateLockoutSeconds,
+  LOGIN_FAILURES_BEFORE_LOCKOUT,
+  formatLoginRateLimitMessage,
 
   // Middleware & Factories
   createRateLimiter,
