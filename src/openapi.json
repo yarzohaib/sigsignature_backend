@@ -80,9 +80,184 @@
             "bearerAuth": []
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "templateId"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Human-readable signature name",
+                    "minLength": 1,
+                    "maxLength": 100,
+                    "example": "Sarah Connor - Executive Signature"
+                  },
+                  "templateId": {
+                    "type": "string",
+                    "description": "Unique identifier of the base signature template",
+                    "minLength": 1,
+                    "maxLength": 64,
+                    "pattern": "^[a-z0-9-]+$",
+                    "example": "corporate"
+                  },
+                  "templateVersion": {
+                    "type": "integer",
+                    "description": "Version of the template schema",
+                    "minimum": 1,
+                    "maximum": 1000,
+                    "default": 1
+                  },
+                  "data": {
+                    "type": "object",
+                    "description": "Signature layout content, contacts, and design properties (max 64 KB)",
+                    "properties": {
+                      "fullName": {
+                        "type": "string",
+                        "example": "Sarah Connor"
+                      },
+                      "jobTitle": {
+                        "type": "string",
+                        "example": "Chief Technology Officer"
+                      },
+                      "companyName": {
+                        "type": "string",
+                        "example": "Cyberdyne Systems"
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "sarah@cyberdyne.com"
+                      },
+                      "phone": {
+                        "type": "string",
+                        "example": "+1 (555) 019-2834"
+                      },
+                      "website": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://cyberdyne.com"
+                      },
+                      "avatarUrl": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "companyLogoUrl": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "themeColor": {
+                        "type": "string",
+                        "pattern": "^#[0-9A-Fa-f]{6}$",
+                        "example": "#2563eb"
+                      },
+                      "fontFamily": {
+                        "type": "string",
+                        "example": "Inter"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "Signature created"
+          },
+          "400": {
+            "description": "Validation error (missing mandatory fields or invalid format)"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/uploads/presign": {
+      "post": {
+        "summary": "Generate Presigned S3 Upload URL",
+        "description": "Generates a presigned S3 PUT URL for direct client-to-S3 asset uploads (e.g. avatars, logos).",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["contentType", "size"],
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": ["avatar", "logo"],
+                    "default": "avatar",
+                    "description": "Target asset classification"
+                  },
+                  "contentType": {
+                    "type": "string",
+                    "enum": ["image/jpeg", "image/png", "image/webp"],
+                    "description": "MIME content type of the image asset"
+                  },
+                  "size": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2097152,
+                    "description": "Exact file size in bytes (max 2MB / 2,097,152 bytes)",
+                    "example": 524288
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Presigned upload URL generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "uploadUrl": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "key": {
+                          "type": "string"
+                        },
+                        "publicUrl": {
+                          "type": "string",
+                          "format": "uri"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error (invalid kind, contentType, or missing size)"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
