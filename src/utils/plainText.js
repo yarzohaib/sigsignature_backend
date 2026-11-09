@@ -48,12 +48,7 @@ function plainTextString({
     });
   }
 
-  if (typeof max === "number") {
-    schema = schema.refine((val) => val.length <= max, {
-      message: error || `Cannot exceed ${max} characters`,
-    });
-  }
-
+  // Check markup/HTML safety before length check to prioritize security feedback
   schema = schema.refine(
     (val) => {
       // Reject any HTML tags or markup characters
@@ -71,6 +66,12 @@ function plainTextString({
       message: "This field cannot contain HTML or markup",
     }
   );
+
+  if (typeof max === "number") {
+    schema = schema.refine((val) => val.length <= max, {
+      message: error || `Cannot exceed ${max} characters`,
+    });
+  }
 
   return schema;
 }

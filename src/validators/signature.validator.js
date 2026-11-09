@@ -602,12 +602,12 @@ const themeColorSchema = z
  */
 const signatureDataSchema = z
   .object({
-    fullName: plainTextString({ max: 100 }).default(""),
-    jobTitle: plainTextString({ max: 100 }).default(""),
-    companyName: plainTextString({ max: 100 }).default(""),
-    email: plainTextString({ max: 254 }).default(""),
-    phone: plainTextString({ max: 40 }).default(""),
-    website: plainTextString({ max: 200 }).default(""),
+    fullName: plainTextString({ max: 20 }).default(""),
+    jobTitle: plainTextString({ max: 24 }).default(""),
+    companyName: plainTextString({ max: 24 }).default(""),
+    email: plainTextString({ max: 30 }).default(""),
+    phone: plainTextString({ max: 25 }).default(""),
+    website: plainTextString({ max: 40 }).default(""),
     avatarUrl: z
       .string()
       .trim()
@@ -648,12 +648,12 @@ const signatureDataSchema = z
  */
 const updateSignatureDataSchema = z
   .object({
-    fullName: plainTextString({ max: 100 }).optional(),
-    jobTitle: plainTextString({ max: 100 }).optional(),
-    companyName: plainTextString({ max: 100 }).optional(),
-    email: plainTextString({ max: 254 }).optional(),
-    phone: plainTextString({ max: 40 }).optional(),
-    website: plainTextString({ max: 200 }).optional(),
+    fullName: plainTextString({ max: 20 }).optional(),
+    jobTitle: plainTextString({ max: 24 }).optional(),
+    companyName: plainTextString({ max: 24 }).optional(),
+    email: plainTextString({ max: 30 }).optional(),
+    phone: plainTextString({ max: 25 }).optional(),
+    website: plainTextString({ max: 40 }).optional(),
     avatarUrl: z
       .string()
       .trim()
