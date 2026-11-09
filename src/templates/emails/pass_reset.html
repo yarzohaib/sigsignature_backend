@@ -110,15 +110,16 @@
       text-align: right;
     }
     .header-art-layout {
-      width: 100%;
+      width: 88px;
       height: 159px;
       border-collapse: collapse;
+      margin-left: auto;
     }
     .asterisk-cell {
       height: 36px;
       padding: 0 0 0 0;
       vertical-align: top;
-      text-align: right;
+      text-align: center;
     }
     .asterisk-badge {
       display: inline-block;
@@ -138,14 +139,13 @@
     .lock-cell {
       padding: 0;
       vertical-align: bottom;
-      text-align: right;
+      text-align: center;
     }
     .lock-icon {
       width: 88px;
       height: 88px;
       object-fit: contain;
       display: inline-block;
-      margin-right: -10px;
     }
     .body-content {
       padding: 56px 48px 36px 48px;
@@ -323,8 +323,8 @@
         line-height: 17px !important;
       }
       .header-art-cell { width: 28% !important; padding: 0 5% 3% 0 !important; }
-      .header-art-layout { height: 100% !important; }
-      .asterisk-cell { height: 36px !important; }
+      .header-art-layout { width: 48px !important; height: 100% !important; }
+      .asterisk-cell { height: 36px !important; text-align: center !important; }
       .asterisk-badge {
         width: 42px !important;
         height: 22px !important;
@@ -332,6 +332,7 @@
         letter-spacing: 2px !important;
         line-height: 18px !important;
       }
+      .lock-cell { text-align: center !important; }
       .lock-icon {
         width: 48px !important;
         height: auto !important;
@@ -383,16 +384,16 @@
                   <p class="header-desc" style="max-width: 320px; margin: 0; color: #49484E; font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 20px; font-weight: 400; line-height: 28px;">We received a request to reset your password.</p>
                 </td>
                 <td class="header-art-cell" style="width: 28%; padding: 0 44px 12px 0; vertical-align: bottom; text-align: right;">
-                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" class="header-art-layout" style="width: 100%; height: 159px; border-collapse: collapse;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="right" class="header-art-layout" style="width: 88px; height: 159px; border-collapse: collapse; margin-left: auto;">
                     <tr>
-                      <td class="asterisk-cell" style="height: 36px; vertical-align: top; text-align: right;">
+                      <td align="center" class="asterisk-cell" style="height: 36px; vertical-align: top; text-align: center;">
                         <span class="asterisk-badge" role="img" aria-label="Password characters" style="display: inline-block; width: 62px; height: 28px; border: 2px solid #022977; border-radius: 8px; color: #022977; font-family: Arial, sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 3px; line-height: 24px; text-align: center; white-space: nowrap;">***</span>
                       </td>
                     </tr>
                     <tr><td style="height: 25px;"></td></tr>
                     <tr>
-                      <td class="lock-cell" style="vertical-align: bottom; text-align: right;">
-                        <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/v1791611424/643v63v63v.svg" alt="Lock Icon" class="lock-icon" style="display: inline-block; width: 88px; height: 88px; object-fit: contain; border: 0; margin-right: -10px;" />
+                      <td align="center" class="lock-cell" style="vertical-align: bottom; text-align: center;">
+                        <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/w_176,h_176,c_fit/v1791611424/643v63v63v.png" width="88" height="88" alt="Lock Icon" class="lock-icon" style="display: inline-block; width: 88px; height: 88px; object-fit: contain; border: 0;" />
                       </td>
                     </tr>
                   </table>
