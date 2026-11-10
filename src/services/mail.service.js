@@ -317,9 +317,9 @@ async function sendReferralInviteEmail({ to, senderName, inviteUrl }) {
   const text = [
     `Hi there,`,
     ``,
-    `${name} gifted you 1 Month of Sig Signature Pro!`,
+    `${name} has invited you to create professional email signatures with Sig Signature!`,
     ``,
-    `Claim your 30 days of Pro access free (no credit card or payment info required):`,
+    `Create your free account here:`,
     inviteUrl,
     ``,
     `© 2026 Sig Signature. All rights reserved.`,
@@ -327,7 +327,7 @@ async function sendReferralInviteEmail({ to, senderName, inviteUrl }) {
 
   return sendEmail({
     to,
-    subject: `${name} gifted you 1 Month of Sig Signature Pro`,
+    subject: `${name} invited you to Sig Signature`,
     html,
     text,
   });

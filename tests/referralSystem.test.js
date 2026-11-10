@@ -98,7 +98,7 @@ describe("Referral System & 1-Month Free Pro Backend Suite", () => {
     assert.equal(inviteeUser.isVerified, false, "Email should not be verified yet");
   });
 
-  test("4. Email verification triggers automatic Pro activation for both parties", async () => {
+  test("4. Email verification triggers automatic Pro activation for the inviter only", async () => {
     // Before verification: check inviter proTrialUntil is null
     const resBefore = await pool.query(`SELECT * FROM "User" WHERE "id" = $1`, [inviterUser.id]);
     const inviterBefore = resBefore.rows[0];
@@ -116,13 +116,11 @@ describe("Referral System & 1-Month Free Pro Backend Suite", () => {
     const expectedDays = Math.round((inviterTrialDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
     assert.ok(expectedDays >= 29 && expectedDays <= 31, `Trial duration should be ~30 days, got ${expectedDays}`);
 
-    // Invitee should also receive 30 days of Pro trial
-    assert.ok(rewards.invitee.proTrialUntil, "Invitee proTrialUntil should be set");
-    const inviteeTrialDate = new Date(rewards.invitee.proTrialUntil);
-    const inviteeExpectedDays = Math.round((inviteeTrialDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-    assert.ok(inviteeExpectedDays >= 29 && inviteeExpectedDays <= 31, `Invitee trial should be ~30 days, got ${inviteeExpectedDays}`);
+    // Invitee should NOT receive pro trial (only the sender gets the reward)
+    const resInviteeAfter = await pool.query(`SELECT * FROM "User" WHERE "id" = $1`, [inviteeUser.id]);
+    assert.equal(resInviteeAfter.rows[0].proTrialUntil, null, "Invitee should remain on standard free tier");
 
-    // Verify info endpoint reflects active pro status
+    // Verify info endpoint reflects active pro status for inviter
     const inviterInfo = await referralService.getReferralInfo(inviterUser.id);
     assert.equal(inviterInfo.isProTrialActive, true, "Inviter pro trial should now be active");
     assert.equal(inviterInfo.referralCount, 1, "Inviter referral count should be 1");

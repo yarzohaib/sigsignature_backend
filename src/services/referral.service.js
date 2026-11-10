@@ -118,8 +118,8 @@ const referralService = {
   },
 
   /**
-   * Unlocks 30 Days of Pro for both the inviter and invitee immediately without credit card.
-   * Triggered upon email verification or Google OAuth registration.
+   * Unlocks 30 Days of Pro for the inviter immediately without credit card.
+   * Triggered upon email verification or Google OAuth registration of the invitee.
    */
   async activateReferralRewards(inviteeId) {
     const invitee = await userRepository.findFirst({ id: inviteeId });
@@ -132,13 +132,10 @@ const referralService = {
       return null;
     }
 
-    // 1. Grant 30 days to inviter
+    // 1. Grant 30 days to inviter only
     const updatedInviter = await userRepository.grantProTrialDays(inviter.id, 30);
 
-    // 2. Grant 30 days to invitee (Win-Win)
-    const updatedInvitee = await userRepository.grantInviteeProTrial(invitee.id, 30);
-
-    // 3. Send celebration notification email to inviter
+    // 2. Send celebration notification email to inviter
     try {
       const inviteeName = `${invitee.firstName || ""} ${invitee.lastName || ""}`.trim() || invitee.email;
       const proTrialDate = updatedInviter?.proTrialUntil
@@ -165,7 +162,7 @@ const referralService = {
 
     return {
       inviter: updatedInviter,
-      invitee: updatedInvitee,
+      invitee,
     };
   },
 };
