@@ -98,7 +98,7 @@
       max-width: 320px;
       color: #49484E !important;
       font-family: 'Commissioner', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-size: 20px;
+      font-size: 24px;
       font-weight: 400;
       line-height: 28px;
       margin: 0;
@@ -125,16 +125,14 @@
       display: inline-block;
       width: 62px;
       height: 28px;
-      border: 2px solid #022977;
-      border-radius: 8px;
-      color: #022977;
-      font-family: Arial, sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      line-height: 24px;
-      text-align: center;
-      white-space: nowrap;
+      border: 0;
+    }
+    .asterisk-icon {
+      display: inline-block;
+      width: 62px;
+      height: 28px;
+      object-fit: contain;
+      border: 0;
     }
     .lock-cell {
       padding: 0;
@@ -309,7 +307,8 @@
       .header-title-cell { height: 25% !important; padding-left: 5% !important; }
       .header-title {
         font-size: 18px !important;
-        line-height: 22px !important;
+        line-height: 18px !important;
+        padding: 0 0 2px !important;
       }
       .header-bottom { height: 43% !important; }
       .header-desc-cell {
@@ -327,10 +326,11 @@
       .asterisk-cell { height: 36px !important; text-align: center !important; }
       .asterisk-badge {
         width: 42px !important;
-        height: 22px !important;
-        font-size: 15px !important;
-        letter-spacing: 2px !important;
-        line-height: 18px !important;
+        height: 19px !important;
+      }
+      .asterisk-icon {
+        width: 42px !important;
+        height: 19px !important;
       }
       .lock-cell { text-align: center !important; }
       .lock-icon {
@@ -387,7 +387,7 @@
                   <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="right" class="header-art-layout" style="width: 88px; height: 159px; border-collapse: collapse; margin-left: auto;">
                     <tr>
                       <td align="center" class="asterisk-cell" style="height: 36px; vertical-align: top; text-align: center;">
-                        <span class="asterisk-badge" role="img" aria-label="Password characters" style="display: inline-block; width: 62px; height: 28px; border: 2px solid #022977; border-radius: 8px; color: #022977; font-family: Arial, sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 3px; line-height: 24px; text-align: center; white-space: nowrap;">***</span>
+                        <img src="https://res.cloudinary.com/qi6tz0xr/image/upload/w_124,h_56,c_fit/v1791611420/32c57n9n72.png" width="62" height="28" alt="***" class="asterisk-icon" style="display: inline-block; width: 62px; height: 28px; object-fit: contain; border: 0;" />
                       </td>
                     </tr>
                     <tr><td style="height: 25px;"></td></tr>
