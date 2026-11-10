@@ -93,6 +93,10 @@ const accountService = {
     const lifetimeCount = await signatureRepository.lifetimeCountByUser(userId);
     const signatureLimit = Number(process.env.SIGNATURE_LIMIT_PER_USER || 3);
 
+    const isProTrialActive = Boolean(
+      user.proTrialUntil && new Date(user.proTrialUntil).getTime() > Date.now()
+    );
+
     return {
       user: {
         id: user.id,
@@ -103,6 +107,10 @@ const accountService = {
         avatarUrl: user.avatarUrl ?? null,
         isVerified: user.isVerified,
         onboardingSeenAt: formatIso(user.onboardingSeenAt),
+        referralCode: user.referralCode || null,
+        proTrialUntil: formatIso(user.proTrialUntil),
+        isProTrialActive,
+        referralCount: user.referralCount || 0,
       },
       hasPassword,
       providers,

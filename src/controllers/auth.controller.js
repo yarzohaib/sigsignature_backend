@@ -5,7 +5,7 @@ const { AppError, BadRequestError } = require("../utils/errors");
 const authController = {
   async signup(req, res, next) {
     try {
-      const { email, password, firstName, lastName } = req.body;
+      const { email, password, firstName, lastName, referralCode } = req.body;
 
       if (!firstName || !firstName.trim()) {
         throw new BadRequestError("First name is required");
@@ -29,6 +29,7 @@ const authController = {
         password,
         firstName: firstName.trim(),
         lastName: lastName ? lastName.trim() : null,
+        referralCode: referralCode ? referralCode.trim() : null,
       });
 
       return res.status(201).json({

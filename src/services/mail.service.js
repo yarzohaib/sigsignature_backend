@@ -14,6 +14,8 @@ const templates = {
   securityPasswordChanged: null,
   securitySessionsRevoked: null,
   accountDeleted: null,
+  referralInvite: null,
+  referralRewardUnlocked: null,
 };
 
 function getTemplate(name, filename) {
@@ -301,6 +303,71 @@ async function sendAccountDeletedEmail({ to, firstName }) {
   });
 }
 
+/**
+ * Sends a referral invitation email to a colleague or friend.
+ */
+async function sendReferralInviteEmail({ to, senderName, inviteUrl }) {
+  const name = senderName || "A colleague";
+  const rawHtml = getTemplate("referralInvite", "referral_invite.html");
+  const html = renderTemplate(rawHtml, {
+    senderName: name,
+    inviteUrl,
+  });
+
+  const text = [
+    `Hi there,`,
+    ``,
+    `${name} gifted you 1 Month of Sig Signature Pro!`,
+    ``,
+    `Claim your 30 days of Pro access free (no credit card or payment info required):`,
+    inviteUrl,
+    ``,
+    `© 2026 Sig Signature. All rights reserved.`,
+  ].join("\n");
+
+  return sendEmail({
+    to,
+    subject: `${name} gifted you 1 Month of Sig Signature Pro`,
+    html,
+    text,
+  });
+}
+
+/**
+ * Sends a notification email to the inviter when their 30 days of free Pro is activated.
+ */
+async function sendReferralRewardUnlockedEmail({ to, firstName, inviteeName, proTrialUntil, dashboardUrl }) {
+  const name = firstName || "there";
+  const frontendBase = (process.env.FRONTEND_URL || "http://localhost:3000").replace(/\/$/, "");
+  const finalDashboardUrl = dashboardUrl || `${frontendBase}/design-studio`;
+  const rawHtml = getTemplate("referralRewardUnlocked", "referral_reward_unlocked.html");
+  const html = renderTemplate(rawHtml, {
+    firstName: name,
+    inviteeName: inviteeName || "Your colleague",
+    proTrialUntil: proTrialUntil || "30 days from now",
+    dashboardUrl: finalDashboardUrl,
+  });
+
+  const text = [
+    `Hi ${name},`,
+    ``,
+    `Great news! ${inviteeName || "Your colleague"} just joined Sig Signature.`,
+    `Your 1 Month Free Pro Subscription has been activated!`,
+    `Active until: ${proTrialUntil || "30 days from now"}`,
+    ``,
+    `Access your dashboard here: ${finalDashboardUrl}`,
+    ``,
+    `© 2026 Sig Signature. All rights reserved.`,
+  ].join("\n");
+
+  return sendEmail({
+    to,
+    subject: "🎉 Your 1 Month Free Pro is Active!",
+    html,
+    text,
+  });
+}
+
 module.exports = {
   sendEmail,
   sendPasswordResetEmail,
@@ -309,6 +376,8 @@ module.exports = {
   sendPasswordChangedEmail,
   sendSessionsRevokedEmail,
   sendAccountDeletedEmail,
+  sendReferralInviteEmail,
+  sendReferralRewardUnlockedEmail,
   escapeHtml,
   renderTemplate,
 };

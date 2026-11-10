@@ -21,6 +21,7 @@ const sessionRepository = require("../repositories/session.repository");
 const userRepository = require("../repositories/user.repository");
 const emailVerificationRepository = require("../repositories/email-verification.repository");
 const mailService = require("./mail.service");
+const referralService = require("./referral.service");
 const {
   parseDeviceLabel,
   maskIpAddress,
@@ -90,6 +91,10 @@ async function issueUserSession(user, { userAgent, ipAddress, deviceName } = {})
 
   const accessToken = generateAccessToken(user, session?.id || null);
 
+  const isProTrialActive = Boolean(
+    user.proTrialUntil && new Date(user.proTrialUntil).getTime() > Date.now()
+  );
+
   return {
     user: {
       id: user.id,
@@ -98,6 +103,14 @@ async function issueUserSession(user, { userAgent, ipAddress, deviceName } = {})
       lastName: user.lastName,
       companyName: user.companyName ?? null,
       avatarUrl: user.avatarUrl ?? null,
+      referralCode: user.referralCode || null,
+      proTrialUntil: user.proTrialUntil
+        ? typeof user.proTrialUntil.toISOString === "function"
+          ? user.proTrialUntil.toISOString()
+          : String(user.proTrialUntil)
+        : null,
+      isProTrialActive,
+      referralCount: user.referralCount || 0,
       onboardingSeenAt: user.onboardingSeenAt
         ? typeof user.onboardingSeenAt.toISOString === "function"
           ? user.onboardingSeenAt.toISOString()
@@ -112,7 +125,7 @@ async function issueUserSession(user, { userAgent, ipAddress, deviceName } = {})
 }
 
 const authService = {
-  async signup({ email, password, firstName, lastName }) {
+  async signup({ email, password, firstName, lastName, referralCode }) {
     const normalizedEmail = email.trim().toLowerCase();
     const existingUser = await userRepository.findFirst({
       email: normalizedEmail,
@@ -131,6 +144,15 @@ const authService = {
       lastName: lastName ? lastName.trim() : null,
       isVerified: false,
     });
+
+    // Attach referral if a valid referral code was supplied
+    if (referralCode) {
+      try {
+        await referralService.processReferralOnSignup(user.id, referralCode, normalizedEmail);
+      } catch (refErr) {
+        console.warn("[Auth Service] Failed to link referral code:", refErr.message || refErr);
+      }
+    }
 
     // Generate verification token (24-hour expiration)
     try {
@@ -184,6 +206,10 @@ const authService = {
       return null;
     }
 
+    const isProTrialActive = Boolean(
+      user.proTrialUntil && new Date(user.proTrialUntil).getTime() > Date.now()
+    );
+
     return {
       id: user.id,
       email: user.email,
@@ -191,6 +217,14 @@ const authService = {
       lastName: user.lastName,
       companyName: user.companyName ?? null,
       avatarUrl: user.avatarUrl ?? null,
+      referralCode: user.referralCode || null,
+      proTrialUntil: user.proTrialUntil
+        ? typeof user.proTrialUntil.toISOString === "function"
+          ? user.proTrialUntil.toISOString()
+          : String(user.proTrialUntil)
+        : null,
+      isProTrialActive,
+      referralCount: user.referralCount || 0,
       onboardingSeenAt: user.onboardingSeenAt
         ? typeof user.onboardingSeenAt.toISOString === "function"
           ? user.onboardingSeenAt.toISOString()
@@ -605,6 +639,13 @@ const authService = {
     }
 
     await userRepository.markAsVerified(user.email);
+
+    // If this verified user was referred, immediately unlock 30 days of Pro for both parties
+    try {
+      await referralService.activateReferralRewards(user.id);
+    } catch (refErr) {
+      console.warn("[Auth Service] Failed to activate referral rewards on verification:", refErr.message || refErr);
+    }
 
     return {
       success: true,

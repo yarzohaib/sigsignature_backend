@@ -55,6 +55,13 @@ const signupSchema = z.object({
     .or(z.literal("")),
   email: emailSchema,
   password: passwordSchema,
+  referralCode: z
+    .string()
+    .trim()
+    .max(50)
+    .optional()
+    .nullable()
+    .or(z.literal("")),
 });
 
 const loginSchema = z.object({

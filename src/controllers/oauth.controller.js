@@ -5,6 +5,7 @@ const { UnauthorizedError } = require("../utils/errors");
 
 const OAUTH_COOKIE_NAME = "oauth_state";
 const OAUTH_ORIGIN_COOKIE_NAME = "oauth_frontend_origin";
+const OAUTH_REF_COOKIE_NAME = "oauth_referral_code";
 
 function getCookieBaseOptions(req) {
   const isHttps =
@@ -58,6 +59,11 @@ const oauthController = {
       res.cookie(OAUTH_ORIGIN_COOKIE_NAME, frontendOrigin, cookieOptions);
     }
 
+    const referralCode = req.query.ref || req.query.referral_code;
+    if (referralCode && typeof referralCode === "string") {
+      res.cookie(OAUTH_REF_COOKIE_NAME, referralCode.trim().toUpperCase(), cookieOptions);
+    }
+
     const targetUrl = oauthService.getGoogleAuthUrl(state, req);
     return res.redirect(302, targetUrl);
   },
@@ -76,6 +82,11 @@ const oauthController = {
       res.cookie(OAUTH_ORIGIN_COOKIE_NAME, frontendOrigin, cookieOptions);
     }
 
+    const referralCode = req.query.ref || req.query.referral_code;
+    if (referralCode && typeof referralCode === "string") {
+      res.cookie(OAUTH_REF_COOKIE_NAME, referralCode.trim().toUpperCase(), cookieOptions);
+    }
+
     const targetUrl = oauthService.getGithubAuthUrl(state, req);
     return res.redirect(302, targetUrl);
   },
@@ -87,9 +98,11 @@ const oauthController = {
     const { code, state, error } = req.query;
     const savedState = req.cookies ? req.cookies[OAUTH_COOKIE_NAME] : undefined;
 
-    // Always clear the state and origin cookies
+    // Always clear the state, origin, and referral cookies
+    const savedRefCode = req.cookies ? req.cookies[OAUTH_REF_COOKIE_NAME] : undefined;
     res.clearCookie(OAUTH_COOKIE_NAME, cookieOptions);
     res.clearCookie(OAUTH_ORIGIN_COOKIE_NAME, cookieOptions);
+    res.clearCookie(OAUTH_REF_COOKIE_NAME, cookieOptions);
 
     if (error) {
       console.error("Google returned OAuth error query:", error);
@@ -108,7 +121,7 @@ const oauthController = {
     }
 
     try {
-      const user = await oauthService.handleGoogleCallback(code, req);
+      const user = await oauthService.handleGoogleCallback(code, req, savedRefCode);
       const loginCode = await oauthService.createLoginCodeForUser(user.id);
 
       return res.redirect(302, `${frontendBase}/auth/callback?code=${loginCode}`);
@@ -134,9 +147,11 @@ const oauthController = {
     const { code, state, error } = req.query;
     const savedState = req.cookies ? req.cookies[OAUTH_COOKIE_NAME] : undefined;
 
-    // Always clear the state and origin cookies
+    // Always clear the state, origin, and referral cookies
+    const savedRefCode = req.cookies ? req.cookies[OAUTH_REF_COOKIE_NAME] : undefined;
     res.clearCookie(OAUTH_COOKIE_NAME, cookieOptions);
     res.clearCookie(OAUTH_ORIGIN_COOKIE_NAME, cookieOptions);
+    res.clearCookie(OAUTH_REF_COOKIE_NAME, cookieOptions);
 
     if (error) {
       console.error("GitHub returned OAuth error query:", error);
@@ -155,7 +170,7 @@ const oauthController = {
     }
 
     try {
-      const user = await oauthService.handleGithubCallback(code, req);
+      const user = await oauthService.handleGithubCallback(code, req, savedRefCode);
       const loginCode = await oauthService.createLoginCodeForUser(user.id);
 
       return res.redirect(302, `${frontendBase}/auth/callback?code=${loginCode}`);

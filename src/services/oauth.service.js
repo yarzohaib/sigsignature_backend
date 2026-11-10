@@ -4,6 +4,7 @@ const sessionRepository = require("../repositories/session.repository");
 const oauthAccountRepository = require("../repositories/oauth-account.repository");
 const oauthLoginCodeRepository = require("../repositories/oauth-login-code.repository");
 const authService = require("./auth.service");
+const referralService = require("./referral.service");
 
 function getBackendUrl(req) {
   // 1. Explicit environment variable
@@ -102,7 +103,7 @@ const oauthService = {
     return `https://github.com/login/oauth/authorize?${params.toString()}`;
   },
 
-  async handleGoogleCallback(code, req) {
+  async handleGoogleCallback(code, req, referralCode) {
     const redirectUri = `${getBackendUrl(req)}/api/v1/auth/google/callback`;
     const tokenBody = new URLSearchParams({
       code,
@@ -167,10 +168,11 @@ const oauthService = {
       firstName,
       lastName,
       avatarUrl,
+      referralCode,
     });
   },
 
-  async handleGithubCallback(code, req) {
+  async handleGithubCallback(code, req, referralCode) {
     const redirectUri = `${getBackendUrl(req)}/api/v1/auth/github/callback`;
     const tokenRes = await fetch("https://github.com/login/oauth/access_token", {
       method: "POST",
@@ -270,10 +272,11 @@ const oauthService = {
       firstName,
       lastName,
       avatarUrl,
+      referralCode,
     });
   },
 
-  async findOrCreateOAuthUser({ provider, providerAccountId, email, firstName, lastName, avatarUrl = null }) {
+  async findOrCreateOAuthUser({ provider, providerAccountId, email, firstName, lastName, avatarUrl = null, referralCode = null }) {
     const normalizedEmail = email.trim().toLowerCase();
 
     // 1. Check if OAuthAccount exists for provider + providerAccountId
@@ -347,6 +350,16 @@ const oauthService = {
           providerAccountId,
           email: normalizedEmail,
         });
+
+        // Link referral & activate immediately (OAuth email is pre-verified)
+        if (referralCode) {
+          try {
+            await referralService.processReferralOnSignup(user.id, referralCode, normalizedEmail);
+            await referralService.activateReferralRewards(user.id);
+          } catch (refErr) {
+            console.warn("[OAuth] Failed to link/activate referral reward:", refErr.message || refErr);
+          }
+        }
       }
     }
 

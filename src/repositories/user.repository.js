@@ -1,5 +1,10 @@
 const { Temporal } = require("@js-temporal/polyfill");
+const { Pool } = require("pg");
 const db = require("../config/prisma");
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
 const User = db.orm.public.User;
 
@@ -8,7 +13,21 @@ const userRepository = {
     return User.all();
   },
 
+  async findById(userId) {
+    if (!userId) return null;
+    const res = await pool.query(`SELECT * FROM "User" WHERE "id" = $1 LIMIT 1`, [userId]);
+    return res.rows[0] || null;
+  },
+
   async findFirst(filter) {
+    if (filter && filter.id && Object.keys(filter).length === 1) {
+      const res = await pool.query(`SELECT * FROM "User" WHERE "id" = $1 LIMIT 1`, [filter.id]);
+      return res.rows[0] || null;
+    }
+    if (filter && filter.email && Object.keys(filter).length === 1) {
+      const res = await pool.query(`SELECT * FROM "User" WHERE "email" = $1 LIMIT 1`, [filter.email]);
+      return res.rows[0] || null;
+    }
     return User.first(filter);
   },
 
@@ -80,6 +99,77 @@ const userRepository = {
       updatedAt: now,
     });
     return User.first({ id: userId });
+  },
+
+  async findByReferralCode(referralCode) {
+    if (!referralCode) return null;
+    const cleanCode = referralCode.trim().toUpperCase();
+    const res = await pool.query(
+      `SELECT * FROM "User" WHERE UPPER("referralCode") = $1 LIMIT 1`,
+      [cleanCode]
+    );
+    return res.rows[0] || null;
+  },
+
+  async setReferralCode(userId, code) {
+    const res = await pool.query(
+      `UPDATE "User"
+       SET "referralCode" = $1, "updatedAt" = NOW()
+       WHERE "id" = $2
+       RETURNING "referralCode"`,
+      [code, userId]
+    );
+    return res.rows[0]?.referralCode || code;
+  },
+
+  async setReferredBy(userId, inviterId) {
+    const res = await pool.query(
+      `UPDATE "User"
+       SET "referredById" = $1, "updatedAt" = NOW()
+       WHERE "id" = $2 AND "referredById" IS NULL
+       RETURNING "id"`,
+      [inviterId, userId]
+    );
+    return res.rowCount;
+  },
+
+  async grantProTrialDays(userId, days = 30) {
+    const res = await pool.query(
+      `UPDATE "User"
+       SET
+         "proTrialUntil" = (
+           CASE
+             WHEN "proTrialUntil" IS NOT NULL AND "proTrialUntil" > NOW()
+             THEN "proTrialUntil" + ($1 || ' days')::interval
+             ELSE NOW() + ($1 || ' days')::interval
+           END
+         ),
+         "referralCount" = COALESCE("referralCount", 0) + 1,
+         "updatedAt" = NOW()
+       WHERE "id" = $2
+       RETURNING "id", "email", "firstName", "referralCode", "proTrialUntil", "referralCount"`,
+      [days.toString(), userId]
+    );
+    return res.rows[0] || null;
+  },
+
+  async grantInviteeProTrial(userId, days = 30) {
+    const res = await pool.query(
+      `UPDATE "User"
+       SET
+         "proTrialUntil" = (
+           CASE
+             WHEN "proTrialUntil" IS NOT NULL AND "proTrialUntil" > NOW()
+             THEN "proTrialUntil" + ($1 || ' days')::interval
+             ELSE NOW() + ($1 || ' days')::interval
+           END
+         ),
+         "updatedAt" = NOW()
+       WHERE "id" = $2
+       RETURNING "id", "email", "firstName", "referralCode", "proTrialUntil"`,
+      [days.toString(), userId]
+    );
+    return res.rows[0] || null;
   },
 };
 
