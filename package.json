@@ -30,6 +30,7 @@
     "jsonwebtoken": "^9.0.3",
     "prisma": "^8.0.0-rc.20",
     "resend": "^6.34.1",
+    "sanitize-html": "^2.18.1",
     "zod": "^4.6.5"
   }
 }

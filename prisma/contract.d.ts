@@ -34,9 +34,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'9c48988441980960f5e256f94441ed0a7e0cc6da50d7cfc746c1b337f50badcc'>;
+  StorageHashBase<'a942fde36444caec97e30b2978d9352d688d91771ed6a1b5aec5edc4591a0378'>;
 export type ExecutionHash =
-  ExecutionHashBase<'883e2c80aab4489619a3a40c9f199046fe27141721f36df26650b07f360e4d35'>;
+  ExecutionHashBase<'3188c7108890894789d397171fe93efed34d20b8cea4ed29562d628808f379b0'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -250,6 +250,18 @@ type DefaultLiteralValue<CodecId extends string, Encoded> = CodecId extends keyo
 
 export type FieldOutputTypes = {
   readonly public: {
+    readonly EmailConnection: {
+      readonly accountEmail: CodecTypes['pg/text@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly lastPushedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly lastSignatureId: CodecTypes['pg/text@1']['output'] | null;
+      readonly provider: CodecTypes['pg/text@1']['output'];
+      readonly refreshTokenEnc: CodecTypes['pg/text@1']['output'];
+      readonly scopes: CodecTypes['pg/text@1']['output'] | null;
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly userId: CodecTypes['pg/text@1']['output'];
+    };
     readonly EmailVerificationToken: {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly expiresAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
@@ -369,6 +381,18 @@ export type FieldOutputTypes = {
 };
 export type FieldInputTypes = {
   readonly public: {
+    readonly EmailConnection: {
+      readonly accountEmail: CodecTypes['pg/text@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly lastPushedAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly lastSignatureId: CodecTypes['pg/text@1']['input'] | null;
+      readonly provider: CodecTypes['pg/text@1']['input'];
+      readonly refreshTokenEnc: CodecTypes['pg/text@1']['input'];
+      readonly scopes: CodecTypes['pg/text@1']['input'] | null;
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly userId: CodecTypes['pg/text@1']['input'];
+    };
     readonly EmailVerificationToken: {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly expiresAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
@@ -488,6 +512,18 @@ export type FieldInputTypes = {
 };
 export type StorageColumnTypes = {
   readonly public: {
+    readonly EmailConnection: {
+      readonly accountEmail: CodecTypes['pg/text@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly lastPushedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly lastSignatureId: CodecTypes['pg/text@1']['output'] | null;
+      readonly provider: CodecTypes['pg/text@1']['output'];
+      readonly refreshTokenEnc: CodecTypes['pg/text@1']['output'];
+      readonly scopes: CodecTypes['pg/text@1']['output'] | null;
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly userId: CodecTypes['pg/text@1']['output'];
+    };
     readonly EmailVerificationToken: {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly expiresAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
@@ -607,6 +643,18 @@ export type StorageColumnTypes = {
 };
 export type StorageColumnInputTypes = {
   readonly public: {
+    readonly EmailConnection: {
+      readonly accountEmail: CodecTypes['pg/text@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly lastPushedAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly lastSignatureId: CodecTypes['pg/text@1']['input'] | null;
+      readonly provider: CodecTypes['pg/text@1']['input'];
+      readonly refreshTokenEnc: CodecTypes['pg/text@1']['input'];
+      readonly scopes: CodecTypes['pg/text@1']['input'] | null;
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly userId: CodecTypes['pg/text@1']['input'];
+    };
     readonly EmailVerificationToken: {
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly expiresAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
@@ -726,6 +774,20 @@ export type StorageColumnInputTypes = {
 };
 
 export namespace Models {
+  export type public_EmailConnection = {
+    accountEmail: CodecTypes['pg/text@1']['output'];
+    createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    id: CodecTypes['pg/text@1']['output'];
+    lastPushedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+    lastSignatureId: CodecTypes['pg/text@1']['output'] | null;
+    provider: CodecTypes['pg/text@1']['output'];
+    refreshTokenEnc: CodecTypes['pg/text@1']['output'];
+    scopes: CodecTypes['pg/text@1']['output'] | null;
+    updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    userId: CodecTypes['pg/text@1']['output'];
+    user: public_User;
+    readonly [RelationKeys]?: 'user';
+  };
   export type public_EmailVerificationToken = {
     createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     expiresAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
@@ -844,6 +906,7 @@ export namespace Models {
     onboardingSeenAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
     password: CodecTypes['pg/text@1']['output'] | null;
     updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    emailConnections: public_EmailConnection[];
     emailVerificationTokens: public_EmailVerificationToken[];
     oauthAccounts: public_OAuthAccount[];
     oauthLoginCodes: public_OAuthLoginCode[];
@@ -853,6 +916,7 @@ export namespace Models {
     signatures: public_Signature[];
     team: public_Team | null;
     readonly [RelationKeys]?:
+      | 'emailConnections'
       | 'emailVerificationTokens'
       | 'oauthAccounts'
       | 'oauthLoginCodes'
@@ -881,6 +945,7 @@ export namespace Models {
 
 export declare const models: {
   public: {
+    EmailConnection: Models.public_EmailConnection;
     EmailVerificationToken: Models.public_EmailVerificationToken;
     OAuthAccount: Models.public_OAuthAccount;
     OAuthLoginCode: Models.public_OAuthLoginCode;
@@ -912,6 +977,88 @@ type ContractBase = Omit<
         readonly kind: 'postgres-schema';
         readonly entries: {
           readonly table: {
+            readonly EmailConnection: {
+              columns: {
+                readonly accountEmail: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly createdAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly id: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly lastPushedAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: true;
+                };
+                readonly lastSignatureId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly provider: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly refreshTokenEnc: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly scopes: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly updatedAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly userId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [
+                { readonly columns: readonly ['userId', 'provider', 'accountEmail'] },
+              ];
+              indexes: readonly [
+                {
+                  readonly name: 'EmailConnection_userId_idx_a489d58a';
+                  readonly prefix: 'EmailConnection_userId_idx';
+                  readonly columns: readonly ['userId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'EmailConnection';
+                    readonly columns: readonly ['userId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'User';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly EmailVerificationToken: {
               columns: {
                 readonly createdAt: {
@@ -1761,6 +1908,10 @@ type ContractBase = Omit<
   readonly target: 'postgres';
   readonly targetFamily: 'sql';
   readonly roots: {
+    readonly EmailConnection: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'EmailConnection';
+    };
     readonly EmailVerificationToken: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'EmailVerificationToken';
@@ -1794,6 +1945,86 @@ type ContractBase = Omit<
     readonly namespaces: {
       readonly public: {
         readonly models: {
+          readonly EmailConnection: {
+            readonly fields: {
+              readonly accountEmail: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly lastPushedAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+              readonly lastSignatureId: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly provider: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly refreshTokenEnc: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly scopes: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly updatedAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'EmailConnection';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly accountEmail: { readonly column: 'accountEmail' };
+                readonly createdAt: { readonly column: 'createdAt' };
+                readonly id: { readonly column: 'id' };
+                readonly lastPushedAt: { readonly column: 'lastPushedAt' };
+                readonly lastSignatureId: { readonly column: 'lastSignatureId' };
+                readonly provider: { readonly column: 'provider' };
+                readonly refreshTokenEnc: { readonly column: 'refreshTokenEnc' };
+                readonly scopes: { readonly column: 'scopes' };
+                readonly updatedAt: { readonly column: 'updatedAt' };
+                readonly userId: { readonly column: 'userId' };
+              };
+            };
+          };
           readonly EmailVerificationToken: {
             readonly fields: {
               readonly createdAt: {
@@ -2475,6 +2706,17 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
+              readonly emailConnections: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'EmailConnection';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['userId'];
+                };
+              };
               readonly emailVerificationTokens: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -2696,6 +2938,14 @@ type ContractBase = Omit<
     readonly executionHash: ExecutionHash;
     readonly mutations: {
       readonly defaults: readonly [
+        {
+          readonly onCreate: { readonly id: 'uuidv4'; readonly kind: 'generator' };
+          readonly ref: {
+            readonly entry: 'EmailConnection';
+            readonly field: 'id';
+            readonly namespace: 'public';
+          };
+        },
         {
           readonly onCreate: { readonly id: 'uuidv4'; readonly kind: 'generator' };
           readonly ref: {

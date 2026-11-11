@@ -24,6 +24,7 @@ model User {
   signatures          Signature[]
   team                Team?
   settings            UserSettings?
+  emailConnections    EmailConnection[]
 }
 
 model Session {
@@ -192,4 +193,26 @@ model UserSettings {
   updatedAt            DateTime  @default(now())
 
   user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model EmailConnection {
+  id                String    @id @default(uuid())
+  userId            String
+
+  provider          String
+  accountEmail      String
+
+  refreshTokenEnc   String
+  scopes            String?
+
+  lastPushedAt      DateTime?
+  lastSignatureId   String?
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @default(now())
+
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider, accountEmail])
+  @@index([userId])
 }
