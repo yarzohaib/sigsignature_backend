@@ -48,17 +48,25 @@ const signatureService = {
 
   /**
    * Create a new signature for the authenticated user.
-   * Enforces the account lifetime plan limit (SIGNATURE_LIMIT_PER_USER).
+   * Enforces the account lifetime plan limit (SIGNATURE_LIMIT_PER_USER) for Free users.
+   * Pro / Premium users (including active Pro trial) have unlimited creations.
    */
   async create(userId, { name, templateId, templateVersion, data }) {
-    const limit = Number(process.env.SIGNATURE_LIMIT_PER_USER || 3);
-    const lifetimeCount = await signatureRepository.lifetimeCountByUser(userId);
+    const user = await userRepository.findFirst({ id: userId });
+    const isPro = Boolean(
+      user && user.proTrialUntil && new Date(user.proTrialUntil).getTime() > Date.now()
+    );
 
-    if (lifetimeCount >= limit) {
-      throw new ForbiddenError(
-        `You have reached the maximum signature limit (${limit}) for your Free account. Deleting signatures does not grant additional slots. Please upgrade your plan.`,
-        "SIGNATURE_LIMIT_REACHED"
-      );
+    if (!isPro) {
+      const limit = Number(process.env.SIGNATURE_LIMIT_PER_USER || 3);
+      const lifetimeCount = await signatureRepository.lifetimeCountByUser(userId);
+
+      if (lifetimeCount >= limit) {
+        throw new ForbiddenError(
+          `You have reached the maximum signature limit (${limit}) for your Free account. Deleting signatures does not grant additional slots. Please upgrade your plan.`,
+          "SIGNATURE_LIMIT_REACHED"
+        );
+      }
     }
 
     const hostedData = await withHostedAvatar(userId, data);
@@ -174,17 +182,25 @@ const signatureService = {
 
   /**
    * Duplicate an existing signature with a new ID and name `${name} (Copy)`.
-   * Enforces the account lifetime plan limit (SIGNATURE_LIMIT_PER_USER).
+   * Enforces the account lifetime plan limit (SIGNATURE_LIMIT_PER_USER) for Free users.
+   * Pro / Premium users (including active Pro trial) have unlimited creations.
    */
   async duplicate(id, userId) {
-    const limit = Number(process.env.SIGNATURE_LIMIT_PER_USER || 3);
-    const lifetimeCount = await signatureRepository.lifetimeCountByUser(userId);
+    const user = await userRepository.findFirst({ id: userId });
+    const isPro = Boolean(
+      user && user.proTrialUntil && new Date(user.proTrialUntil).getTime() > Date.now()
+    );
 
-    if (lifetimeCount >= limit) {
-      throw new ForbiddenError(
-        `You have reached the maximum signature limit (${limit}) for your Free account. Deleting signatures does not grant additional slots. Please upgrade your plan.`,
-        "SIGNATURE_LIMIT_REACHED"
-      );
+    if (!isPro) {
+      const limit = Number(process.env.SIGNATURE_LIMIT_PER_USER || 3);
+      const lifetimeCount = await signatureRepository.lifetimeCountByUser(userId);
+
+      if (lifetimeCount >= limit) {
+        throw new ForbiddenError(
+          `You have reached the maximum signature limit (${limit}) for your Free account. Deleting signatures does not grant additional slots. Please upgrade your plan.`,
+          "SIGNATURE_LIMIT_REACHED"
+        );
+      }
     }
 
     const original = await signatureRepository.findByIdForUser(id, userId);

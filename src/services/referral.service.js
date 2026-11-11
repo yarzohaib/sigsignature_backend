@@ -23,7 +23,10 @@ const referralService = {
       await userRepository.setReferralCode(user.id, referralCode);
     }
 
-    const frontendBase = (process.env.FRONTEND_URL || "http://localhost:3000").replace(/\/$/, "");
+    let frontendBase = (process.env.FRONTEND_URL || "http://localhost:3000").replace(/\/$/, "");
+    if (frontendBase.startsWith("https://localhost")) {
+      frontendBase = frontendBase.replace("https://", "http://");
+    }
     const shareUrl = `${frontendBase}/signup?ref=${referralCode}`;
 
     const isProTrialActive = Boolean(
@@ -79,7 +82,10 @@ const referralService = {
       await userRepository.setReferralCode(sender.id, referralCode);
     }
 
-    const frontendBase = (process.env.FRONTEND_URL || "http://localhost:3000").replace(/\/$/, "");
+    let frontendBase = (process.env.FRONTEND_URL || "http://localhost:3000").replace(/\/$/, "");
+    if (frontendBase.startsWith("https://localhost")) {
+      frontendBase = frontendBase.replace("https://", "http://");
+    }
     const inviteUrl = `${frontendBase}/signup?ref=${referralCode}&email=${encodeURIComponent(normalizedRecipient)}`;
     const senderName = `${sender.firstName || ""} ${sender.lastName || ""}`.trim() || "A colleague";
 
