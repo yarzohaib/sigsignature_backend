@@ -61,7 +61,11 @@ if (process.env.ALLOWED_ORIGINS) {
   });
 }
 
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+  })
+);
 app.use(
   cors({
     origin: (origin, callback) => {
