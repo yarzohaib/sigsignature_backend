@@ -1,4 +1,5 @@
 const signatureRepository = require("../repositories/signature.repository");
+const userRepository = require("../repositories/user.repository");
 const { NotFoundError, ForbiddenError } = require("../utils/errors");
 const { sanitizeSignature } = require("../utils/plainText");
 const { mirrorProviderAvatar } = require("./upload.service");
