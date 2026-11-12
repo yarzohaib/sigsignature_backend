@@ -145,6 +145,15 @@ const authService = {
       isVerified: false,
     });
 
+    // Auto-generate personal referral code for the new user immediately
+    let personalReferralCode = null;
+    try {
+      personalReferralCode = referralService.generateReferralCode();
+      await userRepository.setReferralCode(user.id, personalReferralCode);
+    } catch (codeErr) {
+      console.warn("[Auth Service] Failed to auto-provision referral code on signup:", codeErr.message || codeErr);
+    }
+
     // Attach referral if a valid referral code was supplied
     if (referralCode) {
       try {
@@ -206,6 +215,17 @@ const authService = {
       return null;
     }
 
+    // Auto-backfill referral code if missing for existing user
+    let userReferralCode = user.referralCode;
+    if (!userReferralCode) {
+      try {
+        userReferralCode = referralService.generateReferralCode();
+        await userRepository.setReferralCode(user.id, userReferralCode);
+      } catch (backfillErr) {
+        console.warn("[Auth Service] Failed to auto-backfill referral code in getCurrentUser:", backfillErr.message || backfillErr);
+      }
+    }
+
     const isProTrialActive = Boolean(
       user.proTrialUntil && new Date(user.proTrialUntil).getTime() > Date.now()
     );
@@ -217,7 +237,7 @@ const authService = {
       lastName: user.lastName,
       companyName: user.companyName ?? null,
       avatarUrl: user.avatarUrl ?? null,
-      referralCode: user.referralCode || null,
+      referralCode: userReferralCode || null,
       proTrialUntil: user.proTrialUntil
         ? typeof user.proTrialUntil.toISOString === "function"
           ? user.proTrialUntil.toISOString()

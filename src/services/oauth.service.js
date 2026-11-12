@@ -344,6 +344,14 @@ const oauthService = {
           isActive: true,
         });
 
+        // Auto-generate personal referral code for the new OAuth user immediately
+        try {
+          const personalReferralCode = referralService.generateReferralCode();
+          await userRepository.setReferralCode(user.id, personalReferralCode);
+        } catch (codeErr) {
+          console.warn("[OAuth] Failed to auto-provision referral code on OAuth signup:", codeErr.message || codeErr);
+        }
+
         await oauthAccountRepository.create({
           userId: user.id,
           provider,

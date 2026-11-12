@@ -171,6 +171,7 @@ const referralService = {
       invitee,
     };
   },
+  generateReferralCode,
 };
 
 module.exports = referralService;
