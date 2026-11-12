@@ -136,12 +136,13 @@ const referralService = {
    * Triggered upon email verification or Google OAuth registration of the invitee.
    */
   async activateReferralRewards(inviteeId) {
-    const invitee = await userRepository.findFirst({ id: inviteeId });
+    if (!inviteeId) return null;
+    const invitee = await userRepository.findById(inviteeId);
     if (!invitee || !invitee.referredById) {
       return null;
     }
 
-    const inviter = await userRepository.findFirst({ id: invitee.referredById });
+    const inviter = await userRepository.findById(invitee.referredById);
     if (!inviter) {
       return null;
     }
