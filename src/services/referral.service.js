@@ -12,7 +12,11 @@ const referralService = {
    * Get or create current user's personal referral link and stats.
    */
   async getReferralInfo(userId) {
-    let user = await userRepository.findFirst({ id: userId });
+    if (!userId) {
+      throw new BadRequestError("User ID is required", "USER_ID_REQUIRED");
+    }
+
+    let user = await userRepository.findById(userId);
     if (!user) {
       throw new NotFoundError("User not found", "USER_NOT_FOUND");
     }
@@ -56,7 +60,11 @@ const referralService = {
       throw new BadRequestError("Please provide a valid email address");
     }
 
-    const sender = await userRepository.findFirst({ id: userId });
+    if (!userId) {
+      throw new BadRequestError("User ID is required", "USER_ID_REQUIRED");
+    }
+
+    const sender = await userRepository.findById(userId);
     if (!sender) {
       throw new NotFoundError("User not found", "USER_NOT_FOUND");
     }

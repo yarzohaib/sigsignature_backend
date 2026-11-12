@@ -7,7 +7,8 @@ const referralController = {
    */
   async getReferralInfo(req, res, next) {
     try {
-      const data = await referralService.getReferralInfo(req.user.id);
+      const userId = req.user.id || req.user.sub;
+      const data = await referralService.getReferralInfo(userId);
       res.status(200).json({
         success: true,
         data,
@@ -23,8 +24,9 @@ const referralController = {
    */
   async sendInvite(req, res, next) {
     try {
+      const userId = req.user.id || req.user.sub;
       const { email } = req.body;
-      const result = await referralService.sendInvite(req.user.id, email);
+      const result = await referralService.sendInvite(userId, email);
       res.status(200).json(result);
     } catch (err) {
       next(err);
