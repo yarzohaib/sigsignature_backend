@@ -83,6 +83,13 @@ const resetPasswordSchema = z.object({
   newPassword: newPasswordSchema,
 });
 
+const validateResetTokenSchema = z.object({
+  token: z
+    .string({ error: "Reset token is required" })
+    .trim()
+    .min(1, "Reset token is required"),
+});
+
 const requestVerificationSchema = z.object({
   email: emailSchema,
 });
@@ -109,6 +116,7 @@ module.exports = {
   loginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
+  validateResetTokenSchema,
   requestVerificationSchema,
   verifyEmailSchema,
   oauthExchangeSchema,

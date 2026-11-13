@@ -233,6 +233,26 @@ const authController = {
     }
   },
 
+  async validateResetToken(req, res, next) {
+    try {
+      const token = req.query.token || req.body?.token;
+
+      if (!token) {
+        throw new BadRequestError("Token is required");
+      }
+
+      const result = await authService.validateResetToken(token.trim());
+
+      return res.status(200).json({
+        success: true,
+        valid: result.valid,
+        message: "Reset token is valid",
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
   async resetPassword(req, res, next) {
     try {
       const { token, newPassword } = req.body;

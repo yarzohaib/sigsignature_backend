@@ -16,6 +16,7 @@ const {
   loginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
+  validateResetTokenSchema,
   requestVerificationSchema,
   verifyEmailSchema,
   oauthExchangeSchema,
@@ -63,6 +64,12 @@ router.post(
   validate(forgotPasswordSchema),
   forgotPasswordLimiter,
   authController.forgotPassword
+);
+
+router.post(
+  "/validate-reset-token",
+  validate(validateResetTokenSchema),
+  authController.validateResetToken
 );
 
 router.post(

@@ -532,6 +532,29 @@ const authService = {
     return { success: true };
   },
 
+  async validateResetToken(token) {
+    if (!token) {
+      throw new BadRequestError("Invalid or expired reset token");
+    }
+
+    const tokenHash = hashResetToken(token.trim());
+    const resetToken = await passwordResetRepository.findByTokenHash(tokenHash);
+
+    if (!resetToken || resetToken.usedAt || isTokenExpired(resetToken.expiresAt)) {
+      throw new BadRequestError("Invalid or expired reset token");
+    }
+
+    const user = await userRepository.findFirst({
+      id: resetToken.userId,
+    });
+
+    if (!user || !user.isActive) {
+      throw new BadRequestError("Invalid or expired reset token");
+    }
+
+    return { valid: true };
+  },
+
   async resetPassword(token, newPassword) {
     if (!token) {
       throw new BadRequestError("Invalid or expired reset token");
