@@ -41,6 +41,7 @@ const callbackLimiter = createRateLimiter({
  * It is protected by the signed, short lived state value created in /connect.
  */
 router.get("/gmail/callback", callbackLimiter, integrationController.gmailCallback);
+router.get("/zoho/callback", callbackLimiter, integrationController.zohoCallback);
 
 // Everything below requires a signed in user
 router.use(authenticate);
@@ -49,5 +50,10 @@ router.get("/gmail", integrationController.gmailStatus);
 router.post("/gmail/connect", connectLimiter, validate(connectGmailSchema), integrationController.gmailConnect);
 router.post("/gmail/push", pushLimiter, validate(pushGmailSchema), integrationController.gmailPush);
 router.delete("/gmail", integrationController.gmailDisconnect);
+
+router.get("/zoho", integrationController.zohoStatus);
+router.post("/zoho/connect", connectLimiter, validate(connectGmailSchema), integrationController.zohoConnect);
+router.post("/zoho/push", pushLimiter, validate(pushGmailSchema), integrationController.zohoPush);
+router.delete("/zoho", integrationController.zohoDisconnect);
 
 module.exports = router;

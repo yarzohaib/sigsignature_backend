@@ -67,6 +67,78 @@ const integrationController = {
     }
   },
 
+  /** GET /api/v1/integrations/zoho */
+  async zohoStatus(req, res, next) {
+    try {
+      const { userId } = getUser(req);
+      return res.status(200).json({ success: true, data: await integrationService.getZohoStatus(userId) });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  /** POST /api/v1/integrations/zoho/connect  ->  { url } to send the browser to Zoho */
+  async zohoConnect(req, res, next) {
+    try {
+      const { userId, email } = getUser(req);
+      const result = await integrationService.startZohoConnect({
+        userId,
+        email,
+        frontendOrigin: req.body?.frontendOrigin,
+        req,
+      });
+      return res.status(200).json({ success: true, data: result });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  /** GET /api/v1/integrations/zoho/callback  (public: Zoho redirects the browser here) */
+  async zohoCallback(req, res) {
+    let target;
+    try {
+      const { code, state, error } = req.query;
+      target = await integrationService.completeZohoConnect({
+        code: typeof code === "string" ? code : undefined,
+        state: typeof state === "string" ? state : undefined,
+        error: typeof error === "string" ? error : undefined,
+        accountsServer: typeof req.query["accounts-server"] === "string" ? req.query["accounts-server"] : undefined,
+        location: typeof req.query.location === "string" ? req.query.location : undefined,
+        req,
+      });
+    } catch (err) {
+      console.error("[zoho callback] unexpected error:", err.message);
+      target = `${oauthService.getFrontendUrl()}/settings?integration=zoho&status=error&reason=failed`;
+    }
+    res.setHeader("Cache-Control", "no-store");
+    return res.redirect(302, target);
+  },
+
+  /** POST /api/v1/integrations/zoho/push */
+  async zohoPush(req, res, next) {
+    try {
+      const { userId } = getUser(req);
+      const result = await integrationService.pushZohoSignature({
+        userId,
+        signatureId: req.body.signatureId,
+        html: req.body.html,
+      });
+      return res.status(200).json({ success: true, data: result });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  /** DELETE /api/v1/integrations/zoho */
+  async zohoDisconnect(req, res, next) {
+    try {
+      const { userId } = getUser(req);
+      return res.status(200).json({ success: true, data: await integrationService.disconnectZoho(userId) });
+    } catch (error) {
+      next(error);
+    }
+  },
+
   /** DELETE /api/v1/integrations/gmail */
   async gmailDisconnect(req, res, next) {
     try {
