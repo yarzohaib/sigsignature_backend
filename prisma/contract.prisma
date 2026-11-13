@@ -204,6 +204,8 @@ model EmailConnection {
 
   refreshTokenEnc   String
   scopes            String?
+  // Provider specific details that are not secret (Zoho: data center and signature id), stored as JSON text
+  metadata          String?
 
   lastPushedAt      DateTime?
   lastSignatureId   String?

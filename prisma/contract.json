@@ -90,6 +90,13 @@
                   "kind": "scalar"
                 }
               },
+              "metadata": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "provider": {
                 "nullable": false,
                 "type": {
@@ -160,6 +167,9 @@
                 },
                 "lastSignatureId": {
                   "column": "lastSignatureId"
+                },
+                "metadata": {
+                  "column": "metadata"
                 },
                 "provider": {
                   "column": "provider"
@@ -1587,6 +1597,11 @@
                   "nativeType": "text",
                   "nullable": true
                 },
+                "metadata": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "provider": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -2727,7 +2742,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "a942fde36444caec97e30b2978d9352d688d91771ed6a1b5aec5edc4591a0378"
+    "storageHash": "1224a38fe978d0aeaa3c21c22abf487f2675d5a8b5948122fbf677b1a07cc80f"
   },
   "execution": {
     "executionHash": "3188c7108890894789d397171fe93efed34d20b8cea4ed29562d628808f379b0",

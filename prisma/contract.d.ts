@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'a942fde36444caec97e30b2978d9352d688d91771ed6a1b5aec5edc4591a0378'>;
+  StorageHashBase<'1224a38fe978d0aeaa3c21c22abf487f2675d5a8b5948122fbf677b1a07cc80f'>;
 export type ExecutionHash =
   ExecutionHashBase<'3188c7108890894789d397171fe93efed34d20b8cea4ed29562d628808f379b0'>;
 export type ProfileHash =
@@ -256,6 +256,7 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly lastPushedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly lastSignatureId: CodecTypes['pg/text@1']['output'] | null;
+      readonly metadata: CodecTypes['pg/text@1']['output'] | null;
       readonly provider: CodecTypes['pg/text@1']['output'];
       readonly refreshTokenEnc: CodecTypes['pg/text@1']['output'];
       readonly scopes: CodecTypes['pg/text@1']['output'] | null;
@@ -387,6 +388,7 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly lastPushedAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly lastSignatureId: CodecTypes['pg/text@1']['input'] | null;
+      readonly metadata: CodecTypes['pg/text@1']['input'] | null;
       readonly provider: CodecTypes['pg/text@1']['input'];
       readonly refreshTokenEnc: CodecTypes['pg/text@1']['input'];
       readonly scopes: CodecTypes['pg/text@1']['input'] | null;
@@ -518,6 +520,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly lastPushedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly lastSignatureId: CodecTypes['pg/text@1']['output'] | null;
+      readonly metadata: CodecTypes['pg/text@1']['output'] | null;
       readonly provider: CodecTypes['pg/text@1']['output'];
       readonly refreshTokenEnc: CodecTypes['pg/text@1']['output'];
       readonly scopes: CodecTypes['pg/text@1']['output'] | null;
@@ -649,6 +652,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly lastPushedAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly lastSignatureId: CodecTypes['pg/text@1']['input'] | null;
+      readonly metadata: CodecTypes['pg/text@1']['input'] | null;
       readonly provider: CodecTypes['pg/text@1']['input'];
       readonly refreshTokenEnc: CodecTypes['pg/text@1']['input'];
       readonly scopes: CodecTypes['pg/text@1']['input'] | null;
@@ -780,6 +784,7 @@ export namespace Models {
     id: CodecTypes['pg/text@1']['output'];
     lastPushedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
     lastSignatureId: CodecTypes['pg/text@1']['output'] | null;
+    metadata: CodecTypes['pg/text@1']['output'] | null;
     provider: CodecTypes['pg/text@1']['output'];
     refreshTokenEnc: CodecTypes['pg/text@1']['output'];
     scopes: CodecTypes['pg/text@1']['output'] | null;
@@ -1001,6 +1006,11 @@ type ContractBase = Omit<
                   readonly nullable: true;
                 };
                 readonly lastSignatureId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly metadata: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: true;
@@ -1973,6 +1983,10 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly metadata: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly provider: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -2017,6 +2031,7 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly lastPushedAt: { readonly column: 'lastPushedAt' };
                 readonly lastSignatureId: { readonly column: 'lastSignatureId' };
+                readonly metadata: { readonly column: 'metadata' };
                 readonly provider: { readonly column: 'provider' };
                 readonly refreshTokenEnc: { readonly column: 'refreshTokenEnc' };
                 readonly scopes: { readonly column: 'scopes' };

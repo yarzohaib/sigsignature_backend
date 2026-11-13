@@ -5,7 +5,7 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-const PUBLIC_COLUMNS = `"id", "userId", "provider", "accountEmail", "scopes", "lastPushedAt", "lastSignatureId", "createdAt", "updatedAt"`;
+const PUBLIC_COLUMNS = `"id", "userId", "provider", "accountEmail", "metadata", "scopes", "lastPushedAt", "lastSignatureId", "createdAt", "updatedAt"`;
 const ALL_COLUMNS = `${PUBLIC_COLUMNS}, "refreshTokenEnc"`;
 
 /**
@@ -40,7 +40,7 @@ const emailConnectionRepository = {
    * One connection per user and provider: saving a connection for a different
    * account email removes the older one.
    */
-  async replaceForUser({ userId, provider, accountEmail, refreshTokenEnc, scopes }) {
+  async replaceForUser({ userId, provider, accountEmail, refreshTokenEnc, scopes, metadata }) {
     const client = await pool.connect();
     try {
       await client.query("BEGIN");
@@ -51,14 +51,15 @@ const emailConnectionRepository = {
       );
       const res = await client.query(
         `INSERT INTO "EmailConnection"
-           ("id", "userId", "provider", "accountEmail", "refreshTokenEnc", "scopes", "createdAt", "updatedAt")
-         VALUES (gen_random_uuid()::text, $1, $2, $3, $4, $5, NOW(), NOW())
+           ("id", "userId", "provider", "accountEmail", "refreshTokenEnc", "scopes", "metadata", "createdAt", "updatedAt")
+         VALUES (gen_random_uuid()::text, $1, $2, $3, $4, $5, $6, NOW(), NOW())
          ON CONFLICT ("userId", "provider", "accountEmail")
          DO UPDATE SET "refreshTokenEnc" = EXCLUDED."refreshTokenEnc",
                        "scopes" = EXCLUDED."scopes",
+                       "metadata" = EXCLUDED."metadata",
                        "updatedAt" = NOW()
          RETURNING ${PUBLIC_COLUMNS}`,
-        [userId, provider, accountEmail, refreshTokenEnc, scopes || null]
+        [userId, provider, accountEmail, refreshTokenEnc, scopes || null, metadata || null]
       );
       await client.query("COMMIT");
       return res.rows[0];
@@ -68,6 +69,14 @@ const emailConnectionRepository = {
     } finally {
       client.release();
     }
+  },
+
+  async saveMetadata(id, metadata) {
+    const res = await pool.query(
+      `UPDATE "EmailConnection" SET "metadata" = $2, "updatedAt" = NOW() WHERE "id" = $1 RETURNING ${PUBLIC_COLUMNS}`,
+      [id, metadata || null]
+    );
+    return res.rows[0] || null;
   },
 
   async markPushed(id, signatureId) {

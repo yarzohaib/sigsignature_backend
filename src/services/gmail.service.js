@@ -146,7 +146,7 @@ async function revokeToken(token) {
  * Checks the HTML for things Gmail cannot keep, then strips anything unsafe.
  * Throws a readable BadRequestError when the signature cannot be used in Gmail.
  */
-function prepareSignatureHtml(rawHtml) {
+function prepareSignatureHtml(rawHtml, { maxLength = MAX_GMAIL_SIGNATURE_LENGTH } = {}) {
   const html = String(rawHtml || "");
 
   if (/<img\b[^>]*\bsrc\s*=\s*["']?\s*data:/i.test(html)) {
@@ -186,7 +186,7 @@ function prepareSignatureHtml(rawHtml) {
     throw new BadRequestError("The signature is empty after cleaning. Please check it and try again.", "GMAIL_EMPTY_SIGNATURE");
   }
 
-  if (clean.length > MAX_GMAIL_SIGNATURE_LENGTH) {
+  if (clean.length > maxLength) {
     throw new BadRequestError(
       `This signature is too large for Gmail (${clean.length} of ${MAX_GMAIL_SIGNATURE_LENGTH} characters). Try removing an element or shortening the text.`,
       "GMAIL_SIGNATURE_TOO_LARGE"

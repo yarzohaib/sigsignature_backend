@@ -35,6 +35,8 @@ const statements = [
       FOREIGN KEY ("userId") REFERENCES "public"."User" ("id") ON DELETE CASCADE;
   EXCEPTION WHEN duplicate_object THEN NULL;
   END $$`,
+  // Zoho support: provider specific, non secret details (data center and signature id) as JSON text
+  `ALTER TABLE "public"."EmailConnection" ADD COLUMN IF NOT EXISTS "metadata" TEXT`,
 ];
 
 async function migrate() {

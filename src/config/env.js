@@ -24,6 +24,8 @@ const envSchema = z.object({
   // Gmail integration (optional: the feature stays switched off until these are set)
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
+  ZOHO_CLIENT_ID: z.string().optional(),
+  ZOHO_CLIENT_SECRET: z.string().optional(),
   INTEGRATION_ENCRYPTION_KEY: z.string().optional(),
   
   AWS_REGION: z.string().default("ap-southeast-2"),
