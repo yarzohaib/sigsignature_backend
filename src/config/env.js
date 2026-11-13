@@ -20,6 +20,11 @@ const envSchema = z.object({
   APP_URL: z.string().optional(),
   TRUST_PROXY_HOPS: z.coerce.number().default(1),
   TURNSTILE_SECRET_KEY: z.string().optional(),
+
+  // Gmail integration (optional: the feature stays switched off until these are set)
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
+  INTEGRATION_ENCRYPTION_KEY: z.string().optional(),
   
   AWS_REGION: z.string().default("ap-southeast-2"),
   S3_BUCKET: z.string().optional(),

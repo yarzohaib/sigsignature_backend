@@ -9,6 +9,7 @@ const teamRoutes = require("./routes/team.routes");
 const publicTeamRoutes = require("./routes/publicTeam.routes");
 const accountRoutes = require("./routes/account.routes");
 const referralRoutes = require("./routes/referral.routes");
+const integrationRoutes = require("./routes/integration.routes");
 const errorHandler = require("./middleware/errorHandler.middleware");
 
 const app = express();
@@ -111,6 +112,7 @@ app.use("/api/v1/team", teamRoutes);
 app.use("/api/v1/public/team", publicTeamRoutes);
 app.use("/api/v1/account", accountRoutes);
 app.use("/api/v1/referrals", referralRoutes);
+app.use("/api/v1/integrations", integrationRoutes);
 
 // OpenAPI & API Documentation Endpoints
 const openApiSpec = require("./openapi.json");
