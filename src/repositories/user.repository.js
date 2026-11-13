@@ -93,12 +93,15 @@ const userRepository = {
   },
 
   async markOnboardingSeen(userId) {
-    const now = Temporal.Now.instant();
-    await User.where({ id: userId }).update({
-      onboardingSeenAt: now,
-      updatedAt: now,
-    });
-    return User.first({ id: userId });
+    if (!userId) return null;
+    const res = await pool.query(
+      `UPDATE "User"
+       SET "onboardingSeenAt" = NOW(), "updatedAt" = NOW()
+       WHERE "id" = $1
+       RETURNING *`,
+      [userId]
+    );
+    return res.rows[0] || null;
   },
 
   async findByReferralCode(referralCode) {

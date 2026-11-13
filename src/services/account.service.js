@@ -191,7 +191,11 @@ const accountService = {
    * Mark onboarding modal as seen (idempotent).
    */
   async markOnboardingSeen(userId) {
-    const user = await userRepository.findFirst({ id: userId });
+    if (!userId) {
+      throw new BadRequestError("User ID is required", "USER_ID_REQUIRED");
+    }
+
+    const user = await userRepository.findById(userId);
     if (!user) {
       throw new NotFoundError("User not found", "USER_NOT_FOUND");
     }
